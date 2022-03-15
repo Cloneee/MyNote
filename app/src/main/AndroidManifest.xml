@@ -8,10 +8,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/splash_screen_theme"
-        >
+        android:theme="@style/splash_screen_theme">
         <activity
-            android:name=".screens.LoginScreen"
+            android:name=".screens.register.RegisterScreen"
+            android:exported="false" />
+        <activity
+            android:name=".screens.home.HomeScreen"
+            android:exported="false" />
+        <activity
+            android:name=".screens.login.LoginScreen"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

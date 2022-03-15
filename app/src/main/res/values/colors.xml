@@ -14,4 +14,6 @@
     <color name="primary_light">#9E9FF6</color>
     <color name="background">#121212</color>
     <color name="transparent">#00ffffff</color>
+    <color name="transparent_background">#20ffffff</color>
+    <color name="transparent_background_pressed">#60ffffff</color>
 </resources>
