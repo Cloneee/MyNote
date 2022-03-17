@@ -29,4 +29,10 @@ public class RegisterScreen extends AppCompatActivity {
     void register (){
         Log.e("TAG", "register: " );
     }
+
+    @Override
+    protected void onDestroy() {
+        binding = null;
+        super.onDestroy();
+    }
 }

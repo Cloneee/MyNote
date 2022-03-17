@@ -57,4 +57,10 @@ public class HomeScreen extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_container, fragment);
         fragmentTransaction.commit();
     }
+
+    @Override
+    protected void onDestroy() {
+        binding = null;
+        super.onDestroy();
+    }
 }

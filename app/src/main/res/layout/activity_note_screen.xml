@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.note.NoteScreen"
+    android:background="@drawable/note_background"
+    android:backgroundTint="@color/white_semi"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingEnd="30dp"
+        android:paddingStart="75dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="116dp"
+        >
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+           <ImageView
+               android:layout_width="40dp"
+               android:layout_height="40dp"
+               android:src="@drawable/ic_pin"
+               app:tint="@color/white_text"
+               android:contentDescription="@string/img_description_note_pin"
+               />
+           <EditText
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:padding="10dp"
+               android:maxLines="1"
+               android:background="@drawable/note_input"
+               android:layout_marginBottom="10dp"
+               android:textSize="30sp"
+               android:fontFamily="cursive"
+               android:textColor="@color/white_text"
+               android:autofillHints="Title"
+               android:textColorHint="@color/white_semi"
+               />
+       </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/note_input"
+            android:gravity="top"
+            android:inputType="text|textMultiLine"
+            android:textColor="@color/white_text"
+            android:maxLines="10"
+            android:lineHeight="46dp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_more"
+        android:src="@drawable/ic_add_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="-90dp"
+        android:layout_marginBottom="10dp"
+        app:borderWidth="2dp"
+        app:maxImageSize="46dp"
+        app:tint="@color/white"
+        app:backgroundTint="@color/white"
+        android:backgroundTint="@color/transparent"
+        />
+
+</LinearLayout>

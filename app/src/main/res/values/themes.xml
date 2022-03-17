@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="splash_screen_theme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="splash_screen_theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_screen</item>
         <item name="android:statusBarColor" >@color/background</item>
     </style>

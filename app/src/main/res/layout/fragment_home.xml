@@ -100,15 +100,18 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/new_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/transparent"
+        android:backgroundTint="@color/transparent"
+        app:maxImageSize="46dp"
         android:src="@drawable/ic_add"
-        android:elevation="5dp"
-        android:backgroundTint="@color/white"
+        app:tint="@color/white"
         />
 
 </FrameLayout>

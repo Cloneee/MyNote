@@ -27,9 +27,24 @@ public class LoginScreen extends AppCompatActivity {
         setContentView(view);
 
         binding.loginButton.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), HomeScreen.class)));
+        binding.registerButton.setOnClickListener(view1 -> startActivity(new Intent(this, RegisterScreen.class)));
+
         binding.guestLoginButton.setOnClickListener(view1 -> {
             Log.e("TAG", "guest");
         });
-        binding.registerButton.setOnClickListener(view1 -> startActivity(new Intent(this, RegisterScreen.class)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        binding = null;
+        super.onDestroy();
     }
 }

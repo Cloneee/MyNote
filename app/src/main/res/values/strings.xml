@@ -28,4 +28,5 @@
     <string name="search_hint">Enter key word</string>
     <string name="empty_label">What do you want to do today?</string>
     <string name="empty_sub_label">Tap + to add your tasks</string>
+    <string name="img_description_note_pin">pint for note title</string>
 </resources>
