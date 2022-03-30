@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.note.NoteScreen"
-    android:background="@drawable/note_background"
-    android:backgroundTint="@color/white_semi"
+    android:background="@color/background"
     android:orientation="vertical"
+
     >
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -17,18 +18,25 @@
         android:paddingStart="75dp"
         android:paddingTop="40dp"
         android:paddingBottom="116dp"
+        android:background="@drawable/note_background"
+        android:backgroundTint="@color/note_background"
         >
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:orientation="horizontal">
+           android:orientation="horizontal"
+           >
            <ImageView
                android:layout_width="40dp"
-               android:layout_height="40dp"
+               android:layout_height="match_parent"
                android:src="@drawable/ic_pin"
                app:tint="@color/white_text"
+               android:textAlignment="center"
                android:contentDescription="@string/img_description_note_pin"
                />
+           <View
+               android:layout_width="20dp"
+               android:layout_height="0dp"/>
            <EditText
                android:layout_width="0dp"
                android:layout_height="wrap_content"
@@ -53,7 +61,7 @@
             android:gravity="top"
             android:inputType="text|textMultiLine"
             android:textColor="@color/white_text"
-            android:maxLines="10"
+            android:padding="10dp"
             android:lineHeight="46dp" />
 
     </LinearLayout>
@@ -72,6 +80,50 @@
         app:tint="@color/white"
         app:backgroundTint="@color/white"
         android:backgroundTint="@color/transparent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/main_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
 
-</LinearLayout>
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/action_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/add_more"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingBottom="20dp"
+        android:paddingHorizontal="40dp"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/action_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@android:drawable/ic_menu_save"
+            app:tint="@color/background"
+            android:padding="10dp"
+            />
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/action_button"-->
+<!--            android:text=""/>-->
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/action_button"-->
+<!--            android:text=""/>-->
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/action_button"-->
+<!--            android:text=""/>-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
