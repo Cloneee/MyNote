@@ -39,11 +39,8 @@ public class NoteAdapter extends ArrayAdapter<Note>  {
     public View getView(int position, View previous, ViewGroup parent) {
 
         boolean isNull = (previous == null);
-        Log.e("TAG","getView: " + (position + 1) + ", " + isNull + "\t\t");
 
-
-
-        Note student = data.get(position);
+        Note note = data.get(position);
 
         LayoutInflater inflater = LayoutInflater.from(ctx);
         View layout = inflater.inflate(R.layout.note_list_item, parent, false);
@@ -52,8 +49,8 @@ public class NoteAdapter extends ArrayAdapter<Note>  {
         TextView subtitle = layout.findViewById(R.id.subtitle);
         ImageView avatar = layout.findViewById(R.id.avatar);
 
-        title.setText(student.getName());
-        subtitle.setText(student.getEmail());
+        title.setText(note.getTitle());
+        subtitle.setText(note.getMessage());
 
         int ImageId = R.drawable.ic_home;
 
@@ -62,8 +59,13 @@ public class NoteAdapter extends ArrayAdapter<Note>  {
         return layout;
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        observer.onChange();
+    }
 
-    public void registerDataSetObserver() {
+    public void onDataChange(){
         observer.onChange();
     }
 

@@ -12,7 +12,12 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.mynote.R;
+import com.example.mynote.configs.Constant;
 import com.example.mynote.databinding.ActivityNoteScreenBinding;
+import com.example.mynote.models.Note;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class NoteScreen extends AppCompatActivity {
@@ -29,9 +34,11 @@ public class NoteScreen extends AppCompatActivity {
         setContentView(view);
 
 
+
+
         binding.saveButton.setOnClickListener(view1 -> {
             Intent i = new Intent();
-            i.putExtra("sample_email", "binding.editText.getText().toString()");
+            i.putExtra(Constant.NOTE_RESULT, new Note(binding.title.getText().toString(),binding.message.getText().toString(), new ArrayList<Integer>()));
             setResult(Activity.RESULT_OK, i);
             finish();
         });
