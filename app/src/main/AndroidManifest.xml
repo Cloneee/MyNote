@@ -8,6 +8,29 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyNote" />
+        android:theme="@style/splash_screen_theme">
+        <activity
+            android:name=".screens.note.NoteScreen"
+            android:exported="false" />
+        <activity
+            android:name=".screens.register.RegisterScreen"
+            android:exported="false" />
+        <activity
+            android:name=".screens.home.HomeScreen"
+            android:exported="false" />
+        <activity
+            android:name=".screens.login.LoginScreen"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 
 </manifest>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_screen"
+        android:icon="@drawable/ic_home"
+        android:title="@string/bottom_tab_home"
+        />
+
+    <item
+        android:id="@+id/calendar_screen"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/bottom_tab_calendar" />
+
+    <item
+        android:id="@+id/focus_screen"
+        android:icon="@drawable/ic_clock"
+        android:title="@string/bottom_tab_focus" />
+
+    <item
+        android:id="@+id/user_screen"
+        android:icon="@drawable/ic_user"
+        android:title="@string/bottom_tab_profile"
+        />
+</menu>
