@@ -83,8 +83,9 @@ public class HomeFragment extends Fragment{
                             if(noteResult != null) {
 //                                noteAdapter.add(noteResult);
 //                                noteAdapter.notifyDataSetChanged();
-                                addNote(noteResult.getTitle(), noteResult.getMessage(), (ArrayList<Integer>) noteResult.getAttachments());
-                                //Log.e("TAG", "onActivityResult: " + noteResult.toString());
+                                Log.e("TAG", "onActivityResult: " + noteResult.toString());
+                                addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
+
                             }
                         }
                     }catch (Exception e){
@@ -142,14 +143,14 @@ public class HomeFragment extends Fragment{
         for (int i = 1; i <= 0; i++) {
             String title = "Student " + i;
             String message = "student" + i + "@gmail.com";
-            noteList.add(new Note(title, message, new ArrayList<Integer>()));
+            noteList.add(new Note(title, message, "", "", ""));
         }
         notes = (ArrayList<Note>) noteList.clone();
     }
 
-    private void addNote (String title, String message, ArrayList<Integer> a){
+    private void addNote (String title, String message, String dateNotify, String password, String tag){
         try {
-            noteList.add(new Note(title, message, a));
+            noteList.add(new Note(title, message,  dateNotify, password, tag));
             notes.clear();
             notes.addAll(noteList);
             noteAdapter.notifyDataSetChanged();

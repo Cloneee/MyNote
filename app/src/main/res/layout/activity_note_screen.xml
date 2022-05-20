@@ -109,91 +109,50 @@
             android:textColorHint="@color/hint_text"
             />
 
+
         <LinearLayout
+            android:id="@+id/tag_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal"
             >
-
-            <EditText
-                android:id="@+id/note_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:maxLines="1"
-                android:background="@drawable/note_input"
-                android:layout_marginTop="10dp"
-                android:textSize="14sp"
-                android:textColor="@color/white_text"
-                android:hint="@string/password_label"
-                android:textColorHint="@color/hint_text"
-                />
-        </LinearLayout>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <LinearLayout
-                android:id="@+id/tag_container"
+            <TextView
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Add to the note  "
+                android:textSize="20sp"
+                android:textColor="@color/white_text"
+                android:gravity="center"
+
+                />
+             <ImageButton
+                 android:id="@+id/add_notify"
+                 android:layout_width="50dp"
+                 android:layout_height="50dp"
+                 android:src="@drawable/ic_clock"
+                 app:tint="@color/teal_200"
+                 android:background="@color/transparent"
+                 />
+            <ImageButton
+                android:id="@+id/add_tag"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:orientation="horizontal"
-                >
-                 <ImageButton
-                     android:id="@+id/calendar_button"
-                     android:layout_width="50dp"
-                     android:layout_height="50dp"
-                     android:src="@drawable/ic_clock"
-                     app:tint="@color/teal_200"
-                     android:background="@color/transparent"
-                     />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_back"
-                    android:background="@color/transparent"
-                    />
+                android:src="@drawable/ic_tag"
+                android:background="@color/transparent"
+                app:tint="@color/teal_200"
+                />
+            <ImageButton
+                android:id="@+id/add_password"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_lock"
+                android:background="@color/transparent"
+                app:tint="@color/teal_200"
+                />
             </LinearLayout>
-        </HorizontalScrollView>
+
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/save_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save"
