@@ -1,5 +1,7 @@
 package com.example.mynote.screens.home;
 
+import static com.example.mynote.configs.Constant.NOTE_RESULT;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -28,6 +30,7 @@ import com.example.mynote.models.Note;
 import com.example.mynote.screens.note.NoteScreen;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
 public class HomeFragment extends Fragment{
@@ -47,6 +50,7 @@ public class HomeFragment extends Fragment{
 
         initNotes();
         noteAdapter = new NoteAdapter(this.getContext(), notes);
+
         noteAdapter.observer = () -> {
             if(notes.isEmpty()) {
                 binding.listItem.setVisibility(View.GONE);
@@ -56,9 +60,8 @@ public class HomeFragment extends Fragment{
                 binding.listItemEmpty.setVisibility(View.GONE);
             }
         };
-        noteAdapter.registerDataSetObserver();
-
-        binding.listItemEmpty.setVisibility(View.GONE);
+//        noteAdapter.notifyDataSetChanged();
+        noteAdapter.onDataChange();
 
         return binding.getRoot();
     }
@@ -66,51 +69,51 @@ public class HomeFragment extends Fragment{
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.listView.setAdapter(noteAdapter);
+
         ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
+                result -> {
                     try {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // Handle the Intent
                             Intent intent = result.getData();
-                            String data = intent.getStringExtra("sample_email");
+                            Note noteResult = (Note) intent.getParcelableExtra(NOTE_RESULT);
 
                             //do what you want
-                            if(data == null || data.isEmpty()) {}
-                            else{
-                                Log.e("TAG", "onActivityResult: " + data.toString());
-                            }
+                            if(noteResult != null) {
+//                                noteAdapter.add(noteResult);
+//                                noteAdapter.notifyDataSetChanged();
+                                Log.e("TAG", "onActivityResult: " + noteResult.toString());
+                                addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
 
+                            }
                         }
                     }catch (Exception e){
-
+                        Log.e("TAG", "error: " + e);
                     }
 
-                }
-            });
-
-        binding.listView.setAdapter(noteAdapter);
+                });
 
         binding.listView.setOnItemClickListener((AdapterView<?> adapterView, View view1, int position, long id) -> {
             try{
                 Note note = notes.get(position);
-                String message = "You've clicked on " + note.getName();
+                String message = "You've clicked on " + note.getTitle();
                 if(toast != null) toast.cancel();
                 toast = Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG);
                 toast.show();
-
-                Log.e("TAG", message);
             }catch (Exception e){
                 Log.e("errorTAG", "onViewCreated: " + e);
             }
         });
+        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> {
+            return true;
+        });
+
 
         binding.newButton.setOnClickListener(view1 -> {
-            //Intent i = new Intent(getContext(), NoteScreen.class);
-            //mStartForResult.launch(i);
-
-
+            Intent i = new Intent(getContext(), NoteScreen.class);
+            mStartForResult.launch(i);
+//            addNote("new", "asdjnadsjkad sd", new ArrayList<Integer>());
         });
 
 //        searchBox.addTextChangedListener(new TextWatcher() {
@@ -137,15 +140,23 @@ public class HomeFragment extends Fragment{
 
     private void initNotes() {
         noteList = new ArrayList<>();
-        for (int i = 1; i <= 30; i++) {
-
+        for (int i = 1; i <= 0; i++) {
             String title = "Student " + i;
             String message = "student" + i + "@gmail.com";
-
-            noteList.add(new Note(title, message, new ArrayList<Integer>()));
+            noteList.add(new Note(title, message, "", "", ""));
         }
-
         notes = (ArrayList<Note>) noteList.clone();
+    }
+
+    private void addNote (String title, String message, String dateNotify, String password, String tag){
+        try {
+            noteList.add(new Note(title, message,  dateNotify, password, tag));
+            notes.clear();
+            notes.addAll(noteList);
+            noteAdapter.notifyDataSetChanged();
+        }catch (Exception e){
+            Log.e("TAG", "onViewCreated: " + e);
+        }
     }
 
     @Override

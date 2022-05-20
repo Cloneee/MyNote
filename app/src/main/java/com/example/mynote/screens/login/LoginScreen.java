@@ -19,7 +19,7 @@ public class LoginScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_MyNote);
+//        setTheme(R.style.Theme_MyNote);
         setContentView(R.layout.activity_login_screen);
 
         binding = ActivityLoginScreenBinding.inflate(getLayoutInflater());
