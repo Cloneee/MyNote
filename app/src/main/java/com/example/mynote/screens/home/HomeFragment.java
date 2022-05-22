@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.example.mynote.R;
 import com.example.mynote.adapter.NoteAdapter;
+import com.example.mynote.configs.Constant;
+import com.example.mynote.configs.ToastHelper;
 import com.example.mynote.databinding.FragmentHomeBinding;
 import com.example.mynote.models.ArrayObserver;
 import com.example.mynote.models.Note;
@@ -79,14 +81,20 @@ public class HomeFragment extends Fragment{
                             Intent intent = result.getData();
                             Note noteResult = (Note) intent.getParcelableExtra(NOTE_RESULT);
 
-                            //do what you want
-                            if(noteResult != null) {
-//                                noteAdapter.add(noteResult);
-//                                noteAdapter.notifyDataSetChanged();
-                                Log.e("TAG", "onActivityResult: " + noteResult.toString());
-                                addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
+                            if(noteResult == null) return;
+                            Log.e("TAG", "onActivityResult: " + noteResult.toString());
 
+                            //do what you want
+
+                            if(isNoteExist(noteResult)){
+                                Note n = getNoteInArray(noteResult.getId());
+                                changeNote(n, noteResult);
+                            } else {
+                                addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
                             }
+
+
+
                         }
                     }catch (Exception e){
                         Log.e("TAG", "error: " + e);
@@ -97,10 +105,9 @@ public class HomeFragment extends Fragment{
         binding.listView.setOnItemClickListener((AdapterView<?> adapterView, View view1, int position, long id) -> {
             try{
                 Note note = notes.get(position);
-                String message = "You've clicked on " + note.getTitle();
-                if(toast != null) toast.cancel();
-                toast = Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG);
-                toast.show();
+                Intent i = new Intent(getContext(), NoteScreen.class);
+                i.putExtra(Constant.NOTE_RESULT, note);
+                mStartForResult.launch(i);
             }catch (Exception e){
                 Log.e("errorTAG", "onViewCreated: " + e);
             }
@@ -113,7 +120,6 @@ public class HomeFragment extends Fragment{
         binding.newButton.setOnClickListener(view1 -> {
             Intent i = new Intent(getContext(), NoteScreen.class);
             mStartForResult.launch(i);
-//            addNote("new", "asdjnadsjkad sd", new ArrayList<Integer>());
         });
 
 //        searchBox.addTextChangedListener(new TextWatcher() {
@@ -157,6 +163,35 @@ public class HomeFragment extends Fragment{
         }catch (Exception e){
             Log.e("TAG", "onViewCreated: " + e);
         }
+    }
+
+    private void changeNote (Note note, Note targetNote){
+        try {
+            note.setTitle(targetNote.getTitle());
+            note.setMessage(targetNote.getMessage());
+            note.setPassword(targetNote.getPassword());
+            note.setDateNotify(targetNote.getDateNotify());
+            note.setTag(targetNote.getTag());
+
+            noteAdapter.notifyDataSetChanged();
+
+        }catch (Exception e){
+            Log.e("TAG", "onViewCreated: " + e);
+        }
+    }
+
+    private boolean isNoteExist(Note note){
+        for (Note n: notes) {
+            if(note.getId().equals(n.getId())) return true;
+        }
+        return false;
+    }
+
+    private Note getNoteInArray(String id){
+        for (Note n: notes) {
+            if(id.equals(n.getId())) return n;
+        }
+        return null;
     }
 
     @Override

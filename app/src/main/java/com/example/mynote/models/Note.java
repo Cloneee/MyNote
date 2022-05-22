@@ -7,28 +7,49 @@ import android.util.Log;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class Note implements Parcelable {
+    private String id;
     private String title;
     private String message;
     private String dateNotify; // '21/5/2022 22:45' like this
     private String password;
-    private String tag;
+    private String tagId;
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public Note(String title, String message, String dateNotify, String password, String tag) {
+    public Note(String title, String message, String dateNotify, String password, String tagId,  String id) {
+        this.id = id;
         this.title = title;
         this.message = message;
         this.dateNotify = dateNotify;
         this.password = password;
-        this.tag = tag;
+        this.tagId = tagId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public Note(String title, String message, String dateNotify, String password, String tagId) {
+        this.id = UUID.randomUUID().toString();
+        this.title = title;
+        this.message = message;
+        this.dateNotify = dateNotify;
+        this.password = password;
+        this.tagId = tagId;
+    }
+
+    public String getTag() {
+        return tagId;
+    }
+
+    public void setTag(String tagId) {
+        this.tagId = tagId;
     }
 
     public String getDateNotify() {
@@ -48,11 +69,12 @@ public class Note implements Parcelable {
     }
 
     protected Note(Parcel in) {
+        id = in.readString();
         title = in.readString();
         message = in.readString();
         dateNotify = in.readString();
         password = in.readString();
-        tag = in.readString();
+        tagId = in.readString();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -86,7 +108,7 @@ public class Note implements Parcelable {
 
     @Override
     public String toString() {
-        return "Note{"+ title + ", message: " + message + ", dateNotify: " + dateNotify + ", password: " + password + "tag: " + tag +'}';
+        return "Note{"+ title + ", id: " + id + ", message: " + message + ", dateNotify: " + dateNotify + ", password: " + password + "tagId: " + tagId +'}';
     }
 
     @Override
@@ -96,10 +118,11 @@ public class Note implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeString(message);
         parcel.writeString(dateNotify);
         parcel.writeString(password);
-        parcel.writeString(tag);
+        parcel.writeString(tagId);
     }
 }

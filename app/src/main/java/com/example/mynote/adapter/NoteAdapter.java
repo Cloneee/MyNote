@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.mynote.configs.Constant;
+import com.example.mynote.configs.NoteTag;
 import com.example.mynote.models.ArrayObserver;
 import com.example.mynote.models.Note;
 import com.example.mynote.R;
@@ -45,14 +47,13 @@ public class NoteAdapter extends ArrayAdapter<Note>  {
         LayoutInflater inflater = LayoutInflater.from(ctx);
         View layout = inflater.inflate(R.layout.note_list_item, parent, false);
 
-        TextView title = layout.findViewById(R.id.title);
         TextView subtitle = layout.findViewById(R.id.subtitle);
         ImageView avatar = layout.findViewById(R.id.avatar);
 
-        title.setText(note.getTitle());
-        subtitle.setText(note.getMessage());
+        String title = note.getTitle();
+        subtitle.setText(title.isEmpty() ? note.getMessage() : title);
 
-        int ImageId = R.drawable.ic_home;
+        int ImageId = getIcon(note.getTag());
 
         avatar.setImageResource(ImageId);
 
@@ -69,4 +70,13 @@ public class NoteAdapter extends ArrayAdapter<Note>  {
         observer.onChange();
     }
 
+    int getIcon (String id){
+        for (int i = 0; i < Constant.noteTagList.length; i++) {
+            NoteTag item = Constant.noteTagList[i];
+            if(id.equals(item.getId())){
+                return item.getTagIconId();
+            }
+        }
+        return R.drawable.ic_home;
+    }
 }
