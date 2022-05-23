@@ -57,11 +57,16 @@ public class NoteScreen extends AppCompatActivity {
         setContentView(R.layout.activity_note_screen);
 
         try {
-            timePickerDialog.setOnTimePickerCall((hourOfDay, minute) -> {
-                timeNotify = hourOfDay + ":" + minute;
+            timePickerDialog.setOnTimePickerCall((hour, minute) -> {
+                timeNotify = hour + ":" + minute;
+                timePickerDialog.setHour(hour);
+                timePickerDialog.setMinute(minute);
             });
             datePickerDialog.setOnDatePickerCall((year, month, day) -> {
                 dayNotify = day + ":" + month + ":" + year;
+                datePickerDialog.setYear(year);
+                datePickerDialog.setMonth(month);
+                datePickerDialog.setDay(day);
                 timePickerDialog.show(getSupportFragmentManager(), "Time");
             });
 
@@ -143,6 +148,16 @@ public class NoteScreen extends AppCompatActivity {
             id = noteResult.getId();
             password = noteResult.getPassword();
             date = noteResult.getDateNotify();
+            if(!date.isEmpty()){
+                String[] t = date.split(" ");
+                String[] day = t[0].split(":");
+                String[] time = t[1].split(":");
+                timePickerDialog.setHour(Integer.parseInt(time[0]));
+                timePickerDialog.setMinute(Integer.parseInt(time[1]));
+                datePickerDialog.setDay(Integer.parseInt(day[0]));
+                datePickerDialog.setMonth(Integer.parseInt(day[1]));
+                datePickerDialog.setYear(Integer.parseInt(day[2]));
+            }
             tag = noteResult.getTagId();
             Log.e("TAG", "initData: " + tag);
             binding.title.setText(noteResult.getTitle());
