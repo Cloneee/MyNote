@@ -5,6 +5,7 @@ import static com.example.mynote.configs.Constant.NOTE_RESULT;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -13,8 +14,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,7 @@ import com.example.mynote.screens.note.NoteScreen;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment{
 
@@ -122,26 +127,27 @@ public class HomeFragment extends Fragment{
             mStartForResult.launch(i);
         });
 
-//        searchBox.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                students.clear();
-//                if(searchBox.getText().toString().isEmpty()){
-//                    students.addAll(studentsList);
-//                }else {
-//                    students.addAll(studentsList.stream().filter(p -> p.getName().toLowerCase().contains(searchBox.getText().toString().toLowerCase())).collect(Collectors.toList()));
-//                }
-//                adapter.notifyDataSetChanged();
-//
-//            }
-//        });
+        binding.searchInput.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                notes.clear();
+                if(binding.searchInput.getText().toString().isEmpty()){
+                    notes.addAll(noteList);
+                }else {
+                    notes.addAll(noteList.stream().filter(p -> p.getTitle().toLowerCase().contains(binding.searchInput.getText().toString().toLowerCase())).collect(Collectors.toList()));
+                }
+                noteAdapter.notifyDataSetChanged();
+
+            }
+        });
     }
 
     private void initNotes() {
