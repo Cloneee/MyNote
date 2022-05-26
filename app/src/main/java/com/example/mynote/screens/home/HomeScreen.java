@@ -58,9 +58,4 @@ public class HomeScreen extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    @Override
-    protected void onDestroy() {
-        binding = null;
-        super.onDestroy();
-    }
 }

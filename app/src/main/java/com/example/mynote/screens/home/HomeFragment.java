@@ -35,9 +35,9 @@ public class HomeFragment extends Fragment{
     private FragmentHomeBinding binding;
 
     // that is what we gonna show
-    private ArrayList<Note> notes;
+    private ArrayList<Note> notes = new ArrayList<>();
     //that is all we got
-    private ArrayList<Note> noteList;
+    private ArrayList<Note> noteList = new ArrayList<>();
     private NoteAdapter noteAdapter;
 
     @Override
