@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class Constant {
     public static String NOTE_RESULT = "NOTE_RESULT";
+
+    public static int MENU_CONTEXT_DELETE_ID = 1;
+
     public static NoteTag[] noteTagList = {
             new NoteTag("01", "normal", R.drawable.ic_normal),
             new NoteTag("02", "importance", R.drawable.ic_star_note),

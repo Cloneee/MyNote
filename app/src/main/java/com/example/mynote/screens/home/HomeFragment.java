@@ -17,15 +17,21 @@ import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
@@ -81,6 +87,7 @@ public class HomeFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         binding.listView.setAdapter(noteAdapter);
+        registerForContextMenu(binding.listView);
 
         mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -127,7 +134,18 @@ public class HomeFragment extends Fragment{
                 Log.e("errorTAG", "onViewCreated: " + e);
             }
         });
-        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> true);
+
+//        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> {
+//
+//            try {
+//
+//                binding.listView.showContextMenuForChild(view);
+//
+//            }catch (Exception e){
+//                Log.e("TAG", e.toString());
+//            }
+//            return true;
+//        });
 
 
         binding.newButton.setOnClickListener(view1 -> {
@@ -158,15 +176,43 @@ public class HomeFragment extends Fragment{
         });
     }
 
-//    private void initNotes() {
-//        noteList = new ArrayList<>();
-//        for (int i = 1; i <= 0; i++) {
-//            String title = "Student " + i;
-//            String message = "student" + i + "@gmail.com";
-//            noteList.add(new Note(title, message, "", "", ""));
-//        }
-//        notes = (ArrayList<Note>) noteList.clone();
-//    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.item_context_menu, menu);
+
+        if (v.getId() == R.id.listView) {
+            ListView lv = (ListView) v;
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            Note note = (Note) lv.getItemAtPosition(acmi.position);
+        }
+    }
+
+    // menu item select listener
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        if (item.getItemId() == R.id.delete_id) {
+            noteList.remove(info.position);
+            notes.remove(info.position);
+            noteAdapter.notifyDataSetChanged();
+        }
+
+        return true;
+    }
+
+    private void initNotes() {
+        noteList = new ArrayList<>();
+        for (int i = 1; i <= 0; i++) {
+            String title = "Student " + i;
+            String message = "student" + i + "@gmail.com";
+            noteList.add(new Note(title, message, "", "", ""));
+        }
+        notes = (ArrayList<Note>) noteList.clone();
+    }
 
     private void addNote (String title, String message, String dateNotify, String password, String tag){
         try {
