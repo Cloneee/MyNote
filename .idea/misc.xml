@@ -11,6 +11,7 @@
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/drawable_button_selected.xml" value="0.1" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/drawable_button_selector.xml" value="0.1" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/drawable_button_unselected.xml" value="0.1" />
+        <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/empty_list.xml" value="0.126" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/ic_add.xml" value="0.1535" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/ic_add_tag.xml" value="0.186" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/drawable/ic_calendar.xml" value="0.12" />
@@ -32,12 +33,14 @@
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/activity_login_screen.xml" value="0.23735408560311283" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/activity_main.xml" value="0.234375" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/activity_note_screen.xml" value="0.264" />
-        <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/activity_register.xml" value="0.1" />
+        <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/calendar_popup.xml" value="0.264" />
+        <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/check_password_popup.xml" value="0.136" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/fragment_calendar.xml" value="0.151268115942029" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/fragment_focus.xml" value="0.151268115942029" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/fragment_home2.xml" value="0.1" />
+        <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/fragment_trash.xml" value="0.1515625" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/fragment_user.xml" value="0.151268115942029" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/note_element.xml" value="0.1" />
         <entry key="..\:/Dev/PJ/AndroidNative/MyNote/MyNote/app/src/main/res/layout/note_list_item.xml" value="0.152" />

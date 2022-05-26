@@ -12,13 +12,13 @@
         android:title="@string/bottom_tab_calendar" />
 
     <item
-        android:id="@+id/focus_screen"
-        android:icon="@drawable/ic_clock"
-        android:title="@string/bottom_tab_focus" />
-
-    <item
         android:id="@+id/user_screen"
         android:icon="@drawable/ic_user"
         android:title="@string/bottom_tab_profile"
         />
+
+    <item
+        android:id="@+id/trash"
+        android:icon="@drawable/ic_trash"
+        android:title="@string/bottom_tab_trash" />
 </menu>

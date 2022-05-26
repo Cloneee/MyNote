@@ -10,20 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mynote.R;
-import com.example.mynote.databinding.FragmentFocusBinding;
+import com.example.mynote.databinding.FragmentTrashBinding;
 
-public class FocusFragment extends Fragment {
+public class TrashCanFragment extends Fragment {
 
-    private FragmentFocusBinding binding;
+    private FragmentTrashBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentFocusBinding.inflate(inflater, container, false);
+        binding = FragmentTrashBinding.inflate(inflater, container, false);
         return binding.getRoot();
+
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.searchBarContainer.setVisibility(View.GONE);
     }
 
     @Override

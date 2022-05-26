@@ -29,7 +29,7 @@ public class HomeScreen extends AppCompatActivity {
         replaceFragment(home);
 
         CalendarFragment calendar = new CalendarFragment();
-        FocusFragment focus = new FocusFragment();
+        TrashCanFragment trash = new TrashCanFragment();
         UserFragment user = new UserFragment();
 
         binding.navigation.setOnItemSelectedListener(item -> {
@@ -40,8 +40,8 @@ public class HomeScreen extends AppCompatActivity {
                 case R.id.calendar_screen:
                     replaceFragment(calendar);
                     break;
-                case R.id.focus_screen:
-                    replaceFragment(focus);
+                case R.id.trash:
+                    replaceFragment(trash);
                     break;
                 case R.id.user_screen:
                     replaceFragment(user);
