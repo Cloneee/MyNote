@@ -4,16 +4,12 @@ import static com.example.mynote.configs.Constant.NOTE_RESULT;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
@@ -24,20 +20,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
-import com.example.mynote.R;
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
-import com.example.mynote.configs.ToastHelper;
 import com.example.mynote.databinding.FragmentHomeBinding;
-import com.example.mynote.models.ArrayObserver;
 import com.example.mynote.models.Note;
 import com.example.mynote.screens.note.NoteScreen;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment{
@@ -49,13 +39,11 @@ public class HomeFragment extends Fragment{
     //that is all we got
     private ArrayList<Note> noteList;
     private NoteAdapter noteAdapter;
-    private Toast toast;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        initNotes();
         noteAdapter = new NoteAdapter(this.getContext(), notes);
 
         noteAdapter.observer = () -> {
@@ -84,10 +72,12 @@ public class HomeFragment extends Fragment{
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // Handle the Intent
                             Intent intent = result.getData();
+                            if(intent == null) return;
+
                             Note noteResult = (Note) intent.getParcelableExtra(NOTE_RESULT);
 
                             if(noteResult == null) return;
-                            Log.e("TAG", "onActivityResult: " + noteResult.toString());
+                            Log.e("TAG", "onActivityResult: " + noteResult);
 
                             //do what you want
 
@@ -110,6 +100,9 @@ public class HomeFragment extends Fragment{
         binding.listView.setOnItemClickListener((AdapterView<?> adapterView, View view1, int position, long id) -> {
             try{
                 Note note = notes.get(position);
+//                if(!note.getPassword().isEmpty()){
+//
+//                }
                 Intent i = new Intent(getContext(), NoteScreen.class);
                 i.putExtra(Constant.NOTE_RESULT, note);
                 mStartForResult.launch(i);
@@ -117,9 +110,7 @@ public class HomeFragment extends Fragment{
                 Log.e("errorTAG", "onViewCreated: " + e);
             }
         });
-        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> {
-            return true;
-        });
+        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> true);
 
 
         binding.newButton.setOnClickListener(view1 -> {
@@ -150,15 +141,15 @@ public class HomeFragment extends Fragment{
         });
     }
 
-    private void initNotes() {
-        noteList = new ArrayList<>();
-        for (int i = 1; i <= 0; i++) {
-            String title = "Student " + i;
-            String message = "student" + i + "@gmail.com";
-            noteList.add(new Note(title, message, "", "", ""));
-        }
-        notes = (ArrayList<Note>) noteList.clone();
-    }
+//    private void initNotes() {
+//        noteList = new ArrayList<>();
+//        for (int i = 1; i <= 0; i++) {
+//            String title = "Student " + i;
+//            String message = "student" + i + "@gmail.com";
+//            noteList.add(new Note(title, message, "", "", ""));
+//        }
+//        notes = (ArrayList<Note>) noteList.clone();
+//    }
 
     private void addNote (String title, String message, String dateNotify, String password, String tag){
         try {

@@ -2,6 +2,7 @@ package com.example.mynote.adapter;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,10 @@ public class NoteAdapter extends ArrayAdapter<Note>  {
         int ImageId = getIcon(note.getTag());
 
         avatar.setImageResource(ImageId);
+
+//        if(!note.getPassword().isEmpty()){
+//            subtitle.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//        }
 
         return layout;
     }

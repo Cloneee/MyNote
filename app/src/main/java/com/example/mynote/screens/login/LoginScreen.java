@@ -26,7 +26,14 @@ public class LoginScreen extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.loginButton.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), HomeScreen.class)));
+        binding.loginButton.setOnClickListener(view1 -> {
+            try {
+
+                startActivity(new Intent(getApplicationContext(), HomeScreen.class));
+            }catch (Exception e){
+                Log.e("TAG", e.toString() );
+            }
+        });
         binding.registerButton.setOnClickListener(view1 -> startActivity(new Intent(this, RegisterScreen.class)));
 
         binding.guestLoginButton.setOnClickListener(view1 -> {
