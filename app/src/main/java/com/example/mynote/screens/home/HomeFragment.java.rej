@@ -1,0 +1,13 @@
+diff a/app/src/main/java/com/example/mynote/screens/home/HomeFragment.java b/app/src/main/java/com/example/mynote/screens/home/HomeFragment.java	(rejected hunks)
+@@ -35,9 +35,9 @@
+     private FragmentHomeBinding binding;
+ 
+     // that is what we gonna show
+-    private ArrayList<Note> notes;
++    private ArrayList<Note> notes = new ArrayList<>();
+     //that is all we got
+-    private ArrayList<Note> noteList;
++    private ArrayList<Note> noteList = new ArrayList<>();
+     private NoteAdapter noteAdapter;
+ 
+     @Override

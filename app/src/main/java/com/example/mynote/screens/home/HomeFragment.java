@@ -13,13 +13,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+<<<<<<< HEAD
+=======
+import android.app.Activity;
+>>>>>>> dev
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+<<<<<<< HEAD
+=======
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Toast;
+>>>>>>> dev
 
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
@@ -100,9 +113,15 @@ public class HomeFragment extends Fragment{
         binding.listView.setOnItemClickListener((AdapterView<?> adapterView, View view1, int position, long id) -> {
             try{
                 Note note = notes.get(position);
+<<<<<<< HEAD
 //                if(!note.getPassword().isEmpty()){
 //
 //                }
+=======
+                if(!note.getPassword().isEmpty()){
+
+                }
+>>>>>>> dev
                 Intent i = new Intent(getContext(), NoteScreen.class);
                 i.putExtra(Constant.NOTE_RESULT, note);
                 mStartForResult.launch(i);
@@ -195,6 +214,51 @@ public class HomeFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+
+    public void onCheckPasswordClicked(View view) {
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.check_password_popup, null);
+
+        //get element
+        EditText passwordBox = popupView.findViewById(R.id.note_password);
+        passwordBox.setText(password);
+
+        popupView.findViewById(R.id.check_password_button).setOnClickListener(view1 -> {
+
+        });
+
+        passwordBox.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                password = passwordBox.getText().toString();
+            }
+        });
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        if(passwordPopupWindow == null) passwordPopupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        passwordPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+//                popupWindow.dismiss();
+                return true;
+            }
+        });
     }
 
 
