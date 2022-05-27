@@ -1,10 +1,12 @@
 package com.example.mynote.screens.home;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.mynote.configs.Constant.NOTE_RESULT;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -35,6 +37,7 @@ import android.widget.RelativeLayout;
 
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
+import com.example.mynote.configs.NoteTag;
 import com.example.mynote.configs.ToastHelper;
 import com.example.mynote.databinding.FragmentHomeBinding;
 import com.example.mynote.models.Note;
@@ -45,6 +48,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.example.mynote.R;
+import com.example.mynote.services.storage.ShareReferenceHelper;
 
 public class HomeFragment extends Fragment{
 
@@ -65,7 +69,6 @@ public class HomeFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
         noteAdapter = new NoteAdapter(this.getContext(), notes);
 
         noteAdapter.observer = () -> {
@@ -79,7 +82,8 @@ public class HomeFragment extends Fragment{
         };
 //        noteAdapter.notifyDataSetChanged();
         noteAdapter.onDataChange();
-
+        ShareReferenceHelper.getInstance().init(getActivity().getPreferences(MODE_PRIVATE));
+        initNotes();
         return binding.getRoot();
     }
 
@@ -134,18 +138,6 @@ public class HomeFragment extends Fragment{
                 Log.e("errorTAG", "onViewCreated: " + e);
             }
         });
-
-//        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> {
-//
-//            try {
-//
-//                binding.listView.showContextMenuForChild(view);
-//
-//            }catch (Exception e){
-//                Log.e("TAG", e.toString());
-//            }
-//            return true;
-//        });
 
 
         binding.newButton.setOnClickListener(view1 -> {
@@ -205,20 +197,26 @@ public class HomeFragment extends Fragment{
     }
 
     private void initNotes() {
-        noteList = new ArrayList<>();
-        for (int i = 1; i <= 0; i++) {
-            String title = "Student " + i;
-            String message = "student" + i + "@gmail.com";
-            noteList.add(new Note(title, message, "", "", ""));
+
+        try{
+            ArrayList<Note> temp =  ShareReferenceHelper.getInstance().getNoteArray(Constant.NOTE_LIST_REFERENCE);
+            noteList.addAll(temp);
+            notes.addAll(temp);
+            noteAdapter.notifyDataSetChanged();
+        }catch (Exception e){
+            Log.e("TAG", "initNotes: " + e );
         }
-        notes = (ArrayList<Note>) noteList.clone();
+
     }
 
     private void addNote (String title, String message, String dateNotify, String password, String tag){
+
         try {
-            noteList.add(new Note(title, message,  dateNotify, password, tag));
-            notes.clear();
-            notes.addAll(noteList);
+            Note note = new Note(title, message,  dateNotify, password, tag);
+            noteList.add(note);
+//            notes.clear();
+//            notes.addAll(noteList);
+            notes.add(note);
             noteAdapter.notifyDataSetChanged();
         }catch (Exception e){
             Log.e("TAG", "onViewCreated: " + e);
@@ -255,11 +253,22 @@ public class HomeFragment extends Fragment{
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onStop () {
+        ShareReferenceHelper.getInstance().storeNoteArray(Constant.NOTE_LIST_REFERENCE, noteList);
+        super.onStop();
     }
 
+    @Override
+    public void onDestroy() {
+        ShareReferenceHelper.getInstance().storeNoteArray(Constant.NOTE_LIST_REFERENCE, noteList);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+       binding = null;
+    }
 
     public void onCheckPasswordClicked(View view, Note note) {
         // inflate the layout of the popup window

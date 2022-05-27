@@ -9,7 +9,9 @@ import java.util.ArrayList;
 public class Constant {
     public static String NOTE_RESULT = "NOTE_RESULT";
 
-    public static int MENU_CONTEXT_DELETE_ID = 1;
+    public static String NOTE_LIST_REFERENCE = "NOTE_LIST_REFERENCE";
+
+    public static String PREFIX_STORAGE = "MY_NOTE_";
 
     public static NoteTag[] noteTagList = {
             new NoteTag("01", "normal", R.drawable.ic_normal),
