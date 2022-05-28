@@ -3,20 +3,27 @@ package com.example.mynote.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import com.example.mynote.base.BaseClass;
+
+import org.json.JSONObject;
+
 import java.util.UUID;
 
-public class Note implements Parcelable {
+public class Note extends BaseClass implements Parcelable {
     private String id;
     private String title;
     private String message;
     private String dateNotify; // '21/5/2022 22:45' like this
     private String password;
     private String tagId;
+
+    public static String ID = "ID";
+    public static String TITLE = "TITLE";
+    public static String MESSAGE = "MESSAGE";
+    public static String DATE_NOTIFY = "DATE_NOTIFY";
+    public static String PASSWORD = "PASSWORD";
+    public static String TAG_ID = "TAG_ID";
 
     public Note(String title, String message, String dateNotify, String password, String tagId,  String id) {
         this.id = id;
@@ -27,14 +34,6 @@ public class Note implements Parcelable {
         this.tagId = tagId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getTagId() {
-        return tagId;
-    }
-
     public Note(String title, String message, String dateNotify, String password, String tagId) {
         this.id = UUID.randomUUID().toString();
         this.title = title;
@@ -42,6 +41,34 @@ public class Note implements Parcelable {
         this.dateNotify = dateNotify;
         this.password = password;
         this.tagId = tagId;
+    }
+
+    public Note(String json) {
+        try {
+            if(json.isEmpty()) return;
+
+            JSONObject  newJObject = new JSONObject(json);
+
+            this.id = newJObject.getString(ID);
+            this.title = newJObject.getString(TITLE);
+            this.message = newJObject.getString(MESSAGE);
+            this.dateNotify = newJObject.getString(DATE_NOTIFY);
+            this.password = newJObject.getString(PASSWORD);
+            this.tagId = newJObject.getString(TAG_ID);
+
+            return ;
+        }catch (Exception e){
+            return;
+        }
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTagId() {
+        return tagId;
     }
 
     public String getTag() {
@@ -105,6 +132,23 @@ public class Note implements Parcelable {
         this.message = message;
     }
 
+    public String toJson(){
+        try{
+            JSONObject jObject = new JSONObject();
+
+            jObject.put(ID, id);
+            jObject.put(TITLE, title);
+            jObject.put(MESSAGE, message);
+            jObject.put(DATE_NOTIFY, dateNotify);
+            jObject.put(PASSWORD, password);
+            jObject.put(TAG_ID, tagId);
+
+            return jObject.toString();
+
+        }catch (Exception e){
+            return  null;
+        }
+    }
 
     @Override
     public String toString() {

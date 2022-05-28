@@ -1,9 +1,12 @@
 package com.example.mynote.screens.home;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.mynote.configs.Constant.NOTE_RESULT;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -13,39 +16,45 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-<<<<<<< HEAD
-=======
-import android.app.Activity;
->>>>>>> dev
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-<<<<<<< HEAD
-=======
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
->>>>>>> dev
+import android.widget.RelativeLayout;
 
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
+import com.example.mynote.configs.NoteTag;
+import com.example.mynote.configs.ToastHelper;
 import com.example.mynote.databinding.FragmentHomeBinding;
 import com.example.mynote.models.Note;
 import com.example.mynote.screens.note.NoteScreen;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.example.mynote.R;
+import com.example.mynote.services.storage.ShareReferenceHelper;
 
 public class HomeFragment extends Fragment{
 
     private FragmentHomeBinding binding;
+
+    ActivityResultLauncher<Intent> mStartForResult;
 
     // that is what we gonna show
     private ArrayList<Note> notes = new ArrayList<>();
@@ -53,10 +62,13 @@ public class HomeFragment extends Fragment{
     private ArrayList<Note> noteList = new ArrayList<>();
     private NoteAdapter noteAdapter;
 
+    PopupWindow passwordPopupWindow;
+    String password = "";
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
         noteAdapter = new NoteAdapter(this.getContext(), notes);
 
         noteAdapter.observer = () -> {
@@ -70,7 +82,8 @@ public class HomeFragment extends Fragment{
         };
 //        noteAdapter.notifyDataSetChanged();
         noteAdapter.onDataChange();
-
+        ShareReferenceHelper.getInstance().init(getActivity().getPreferences(MODE_PRIVATE));
+        initNotes();
         return binding.getRoot();
     }
 
@@ -78,8 +91,9 @@ public class HomeFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         binding.listView.setAdapter(noteAdapter);
+        registerForContextMenu(binding.listView);
 
-        ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+        mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     try {
                         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -113,23 +127,17 @@ public class HomeFragment extends Fragment{
         binding.listView.setOnItemClickListener((AdapterView<?> adapterView, View view1, int position, long id) -> {
             try{
                 Note note = notes.get(position);
-<<<<<<< HEAD
-//                if(!note.getPassword().isEmpty()){
-//
-//                }
-=======
                 if(!note.getPassword().isEmpty()){
-
+                    onCheckPasswordClicked(view, note);
+                }else {
+                    Intent i = new Intent(getContext(), NoteScreen.class);
+                    i.putExtra(Constant.NOTE_RESULT, note);
+                    mStartForResult.launch(i);
                 }
->>>>>>> dev
-                Intent i = new Intent(getContext(), NoteScreen.class);
-                i.putExtra(Constant.NOTE_RESULT, note);
-                mStartForResult.launch(i);
             }catch (Exception e){
                 Log.e("errorTAG", "onViewCreated: " + e);
             }
         });
-        binding.listView.setOnItemLongClickListener((adapterView, view1, i, l) -> true);
 
 
         binding.newButton.setOnClickListener(view1 -> {
@@ -160,21 +168,55 @@ public class HomeFragment extends Fragment{
         });
     }
 
-//    private void initNotes() {
-//        noteList = new ArrayList<>();
-//        for (int i = 1; i <= 0; i++) {
-//            String title = "Student " + i;
-//            String message = "student" + i + "@gmail.com";
-//            noteList.add(new Note(title, message, "", "", ""));
-//        }
-//        notes = (ArrayList<Note>) noteList.clone();
-//    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.item_context_menu, menu);
+
+        if (v.getId() == R.id.listView) {
+            ListView lv = (ListView) v;
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            Note note = (Note) lv.getItemAtPosition(acmi.position);
+        }
+    }
+
+    // menu item select listener
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        if (item.getItemId() == R.id.delete_id) {
+            noteList.remove(info.position);
+            notes.remove(info.position);
+            noteAdapter.notifyDataSetChanged();
+        }
+
+        return true;
+    }
+
+    private void initNotes() {
+
+        try{
+            ArrayList<Note> temp =  ShareReferenceHelper.getInstance().getNoteArray(Constant.NOTE_LIST_REFERENCE);
+            noteList.addAll(temp);
+            notes.addAll(temp);
+            noteAdapter.notifyDataSetChanged();
+        }catch (Exception e){
+            Log.e("TAG", "initNotes: " + e );
+        }
+
+    }
 
     private void addNote (String title, String message, String dateNotify, String password, String tag){
+
         try {
-            noteList.add(new Note(title, message,  dateNotify, password, tag));
-            notes.clear();
-            notes.addAll(noteList);
+            Note note = new Note(title, message,  dateNotify, password, tag);
+            noteList.add(note);
+//            notes.clear();
+//            notes.addAll(noteList);
+            notes.add(note);
             noteAdapter.notifyDataSetChanged();
         }catch (Exception e){
             Log.e("TAG", "onViewCreated: " + e);
@@ -211,13 +253,24 @@ public class HomeFragment extends Fragment{
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onStop () {
+        ShareReferenceHelper.getInstance().storeNoteArray(Constant.NOTE_LIST_REFERENCE, noteList);
+        super.onStop();
     }
 
+    @Override
+    public void onDestroy() {
+        ShareReferenceHelper.getInstance().storeNoteArray(Constant.NOTE_LIST_REFERENCE, noteList);
+        super.onDestroy();
+    }
 
-    public void onCheckPasswordClicked(View view) {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+       binding = null;
+    }
+
+    public void onCheckPasswordClicked(View view, Note note) {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.check_password_popup, null);
@@ -227,7 +280,16 @@ public class HomeFragment extends Fragment{
         passwordBox.setText(password);
 
         popupView.findViewById(R.id.check_password_button).setOnClickListener(view1 -> {
+            if(password.equals(note.getPassword())){
+                if(passwordPopupWindow != null) passwordPopupWindow.dismiss();
+                password = "";
 
+                Intent i = new Intent(getContext(), NoteScreen.class);
+                i.putExtra(Constant.NOTE_RESULT, note);
+                mStartForResult.launch(i);
+            }else {
+                ToastHelper.showToast("Password is incorrect!");
+            }
         });
 
         passwordBox.addTextChangedListener(new TextWatcher() {
@@ -260,6 +322,4 @@ public class HomeFragment extends Fragment{
             }
         });
     }
-
-
 }

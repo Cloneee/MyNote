@@ -3,7 +3,7 @@
 
     <string name="bottom_tab_home">Home</string>
     <string name="bottom_tab_calendar">Calendar</string>
-    <string name="bottom_tab_focus">Focus</string>
+    <string name="bottom_tab_trash">Trash Can</string>
     <string name="bottom_tab_profile">Profile</string>
 
     <string name="login_label">Log in</string>
