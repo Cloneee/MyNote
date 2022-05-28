@@ -23,11 +23,9 @@ import android.widget.PopupWindow;
 import com.example.mynote.R;
 import com.example.mynote.configs.Constant;
 import com.example.mynote.configs.NoteTag;
-import com.example.mynote.configs.ToastHelper;
+import com.example.mynote.services.s.ToastHelper;
 import com.example.mynote.databinding.ActivityNoteScreenBinding;
 import com.example.mynote.models.Note;
-
-import java.util.ArrayList;
 
 
 public class NoteScreen extends AppCompatActivity {

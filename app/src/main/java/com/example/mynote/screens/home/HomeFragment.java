@@ -6,7 +6,6 @@ import static com.example.mynote.configs.Constant.NOTE_RESULT;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -22,7 +21,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -33,18 +31,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
-import com.example.mynote.configs.NoteTag;
-import com.example.mynote.configs.ToastHelper;
+import com.example.mynote.services.s.ToastHelper;
 import com.example.mynote.databinding.FragmentHomeBinding;
 import com.example.mynote.models.Note;
 import com.example.mynote.screens.note.NoteScreen;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.example.mynote.R;

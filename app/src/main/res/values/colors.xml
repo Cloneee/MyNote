@@ -12,7 +12,9 @@
     <color name="white_text">#CFCECE</color>
     <color name="note_background">#10979797</color>
     <color name="hint_text">#70C3C3C3</color>
-    
+
+    <color name="feed_item_bg">#60ffffff</color>
+
     <color name="primary">#8687E7</color>
     <color name="primary_light">#9E9FF6</color>
     <color name="background">#121212</color>
