@@ -21,15 +21,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Auth {
-    private static String URL = "https://android-server-781.herokuapp.com";
-    private static String API = "/api/v1/user";
+public class Auth extends Base {
+    private static String API = "/user";
     private String token = "";
     private static Auth auth;
-    private static final Moshi moshi = new Moshi.Builder().build();
-    private static final OkHttpClient client = new OkHttpClient();
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
     private static final JsonAdapter<LoginResponse> loginResponseAdapter = moshi.adapter(LoginResponse.class);
     private static final JsonAdapter<LoginParams> loginAdapter = moshi.adapter(LoginParams.class);
     private static final JsonAdapter<Register> registerAdapter = moshi.adapter(Register.class);
