@@ -32,8 +32,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import com.example.mynote.MainActivity;
 import com.example.mynote.adapter.NoteAdapter;
 import com.example.mynote.configs.Constant;
+import com.example.mynote.interfaces.CustomCallBack;
+import com.example.mynote.models.UserType;
+import com.example.mynote.repos.AppRepository;
 import com.example.mynote.services.s.ToastHelper;
 import com.example.mynote.databinding.FragmentHomeBinding;
 import com.example.mynote.models.Note;
@@ -46,6 +50,7 @@ import com.example.mynote.R;
 import com.example.mynote.services.storage.ShareReferenceHelper;
 
 public class HomeFragment extends Fragment{
+    AppRepository appRepository = AppRepository.getInstance();
 
     private FragmentHomeBinding binding;
 
@@ -109,9 +114,6 @@ public class HomeFragment extends Fragment{
                             } else {
                                 addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
                             }
-
-
-
                         }
                     }catch (Exception e){
                         Log.e("TAG", "error: " + e);
@@ -177,27 +179,59 @@ public class HomeFragment extends Fragment{
         }
     }
 
-    // menu item select listener
+    // menu item select listener, delete
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         if (item.getItemId() == R.id.delete_id) {
-            noteList.remove(info.position);
-            notes.remove(info.position);
-            noteAdapter.notifyDataSetChanged();
+            if(MainActivity.user.getType().equals(UserType.NORMAL)){
+                appRepository.deleteNote(getContext(), notes.get(info.position).getId(), res -> {
+                    noteList.remove(getNoteInArray(notes.get(info.position).getId()));
+                    notes.remove(info.position);
+                    noteAdapter.notifyDataSetChanged();
+                });
+            }else {
+                noteList.remove(getNoteInArray(notes.get(info.position).getId()));
+                notes.remove(info.position);
+                noteAdapter.notifyDataSetChanged();
+            }
+
         }
 
         return true;
     }
 
     private void initNotes() {
-
         try{
-            ArrayList<Note> temp =  ShareReferenceHelper.getInstance().getNoteArray(Constant.NOTE_LIST_REFERENCE);
-            noteList.addAll(temp);
-            notes.addAll(temp);
-            noteAdapter.notifyDataSetChanged();
+            if(MainActivity.user.getType().equals(UserType.NORMAL)){
+                appRepository.getNotes(getContext(), new CustomCallBack() {
+                    @Override
+                    public void run(Object res) {
+                        ArrayList<Note> temp = new ArrayList<>((ArrayList<Note>) res);
+                        noteList.addAll(temp);
+                        notes.addAll(temp);
+                        noteAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void run2(Object res) {
+                        ArrayList<Note> temp =  ShareReferenceHelper.getInstance().getNoteArray(Constant.NOTE_LIST_REFERENCE);
+                        if(temp != null){
+                            noteList.addAll(temp);
+                            notes.addAll(temp);
+                            noteAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }else {
+                ArrayList<Note> temp =  ShareReferenceHelper.getInstance().getNoteArray(Constant.NOTE_LIST_REFERENCE);
+                if(temp != null){
+                    noteList.addAll(temp);
+                    notes.addAll(temp);
+                    noteAdapter.notifyDataSetChanged();
+                }
+            }
         }catch (Exception e){
             Log.e("TAG", "initNotes: " + e );
         }
@@ -205,14 +239,22 @@ public class HomeFragment extends Fragment{
     }
 
     private void addNote (String title, String message, String dateNotify, String password, String tag){
-
         try {
             Note note = new Note(title, message,  dateNotify, password, tag);
-            noteList.add(note);
-//            notes.clear();
-//            notes.addAll(noteList);
-            notes.add(note);
-            noteAdapter.notifyDataSetChanged();
+            if(MainActivity.user.getType().equals(UserType.NORMAL)){
+                appRepository.createNote(getContext(), note, res -> {
+                    if((boolean) res){
+                        noteList.add(note);
+                        notes.add(note);
+                        noteAdapter.notifyDataSetChanged();
+                    }
+                });
+            }else {
+                noteList.add(note);
+                notes.add(note);
+                noteAdapter.notifyDataSetChanged();
+            }
+
         }catch (Exception e){
             Log.e("TAG", "onViewCreated: " + e);
         }
@@ -220,13 +262,27 @@ public class HomeFragment extends Fragment{
 
     private void changeNote (Note note, Note targetNote){
         try {
-            note.setTitle(targetNote.getTitle());
-            note.setMessage(targetNote.getMessage());
-            note.setPassword(targetNote.getPassword());
-            note.setDateNotify(targetNote.getDateNotify());
-            note.setTag(targetNote.getTag());
+            if(MainActivity.user.getType().equals(UserType.NORMAL)){
+                appRepository.changeNote(getContext(), targetNote, res -> {
+                    if((boolean) res){
+                        note.setTitle(targetNote.getTitle());
+                        note.setMessage(targetNote.getMessage());
+                        note.setPassword(targetNote.getPassword());
+                        note.setDateNotify(targetNote.getDateNotify());
+                        note.setTag(targetNote.getTag());
 
-            noteAdapter.notifyDataSetChanged();
+                        noteAdapter.notifyDataSetChanged();
+                    }
+                });
+            }else{
+                note.setTitle(targetNote.getTitle());
+                note.setMessage(targetNote.getMessage());
+                note.setPassword(targetNote.getPassword());
+                note.setDateNotify(targetNote.getDateNotify());
+                note.setTag(targetNote.getTag());
+
+                noteAdapter.notifyDataSetChanged();
+            }
 
         }catch (Exception e){
             Log.e("TAG", "onViewCreated: " + e);

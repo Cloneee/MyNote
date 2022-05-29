@@ -2,7 +2,12 @@ package com.example.mynote.services.s;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class RunOnUIHelper {
     private static RunOnUIHelper INSTANCE;
@@ -24,6 +29,13 @@ public class RunOnUIHelper {
     }
 
     public void run(RunOnUiInterface runOnUiInterface){
-        activity.runOnUiThread(() -> runOnUiInterface.run());
+        activity.runOnUiThread(() -> {
+            try {
+                runOnUiInterface.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("TAG", "run: " + e.getMessage() );
+            }
+        });
     }
 }

@@ -4,82 +4,96 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.mynote.interfaces.LoginResponse;
-import com.example.mynote.interfaces.NoteResponse;
+import com.example.mynote.interfaces.BaseCallBack;
+import com.example.mynote.models.LoginResponse;
+import com.example.mynote.models.Note;
+import com.example.mynote.models.NoteResponse;
 import com.example.mynote.services.s.RunOnUIHelper;
 import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSource;
 
-public class Note extends Base {
-    private static String URL = "https://android-server-781.herokuapp.com";
+public class App extends Base {
+
+    private App(){}
+
+    private static App app;
+
+    public static App getApp(){
+        if(app == null){
+            app = new App();
+        }
+        return app;
+    }
+
+    public String getToken (){
+        return token;
+    }
+
     private static String API = "/note";
-    private static Auth auth = Auth.getAuth();
-    private String token = auth.getToken();
+
     private static final ArrayList<NoteResponse> noteList = new ArrayList<NoteResponse>();
-    private static final Note note = new Note();
 
     private static final JsonAdapter<NoteResponse> noteResponseJsonAdapter = moshi.adapter(NoteResponse.class);
     private static final JsonAdapter<Note> noteJsonAdapter = moshi.adapter(Note.class);
 
-    private Note(){}
-    public void getNotes(){
+    private RunOnUIHelper instance = RunOnUIHelper.getInstance();
+
+    String token = "";
+
+    public void setToken(String t){
+        token = t;
+    }
+
+    public void getNotes(BaseCallBack callBack){
         Request request = new Request.Builder()
                 .url(URL + API)
-                .addHeader("Authorization", "Bearer "+token)
+                .addHeader("Authorization", "Bearer " + token)
                 .get()
                 .build();
 
-        RunOnUIHelper instance = RunOnUIHelper.getInstance();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                instance.run(() -> {
+                    callBack.onFailure(e.getMessage());
+                    callBack.onDone();
+                });
+                e.printStackTrace();
+            }
 
-        try{
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    instance.run(() -> {
-                        // TODO Callback here
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                instance.run(() -> {
+                    ArrayList<Note> res = new ArrayList<>();
 
-                    });
-                    e.printStackTrace();
-                }
+                    JSONArray array = new JSONArray(response.body().string());
 
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) {
-                    instance.run(() -> {
-                        ArrayList<NoteResponse> res = null;
-                        try {
-                            Log.e("TAG", "onResponse: " + response.toString());
-                            JSONArray myResponse = new JSONArray(response.body());
-                            for (int i = 0; i< myResponse.length(); i++){
-                                NoteResponse cursorNote = noteResponseJsonAdapter.fromJson((BufferedSource) myResponse.getJSONObject(i));
-                                noteList.add(cursorNote);
-                            }
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                        // TODO Callback here
+                    Log.e("TAG", "notes: " + array);
 
-                    });
-                }
-            });
+                    for (int i = 0; i < array.length(); i++){
+                        res.add(new Note(array.getJSONObject(i).toString()));
+                    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    callBack.onSuccess(res);
+                    callBack.onDone();
+
+                });
+            }
+        });
+
     }
     public void getNoteById(String id){
         Request request = new Request.Builder()
@@ -122,7 +136,8 @@ public class Note extends Base {
             e.printStackTrace();
         }
     }
-    public void createNote(Note note){
+
+    public void createNote(Note note, BaseCallBack<Boolean> callBack){
         String json = noteJsonAdapter.toJson(note);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -131,39 +146,37 @@ public class Note extends Base {
                 .post(body)
                 .build();
 
-        RunOnUIHelper instance = RunOnUIHelper.getInstance();
-        try{
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    instance.run(() -> {
-                        // TODO Callback here
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                instance.run(() -> {
+                    callBack.onFailure(e.getMessage());
+                    callBack.onDone();
+                });
+                e.printStackTrace();
+            }
 
-                    });
-                    e.printStackTrace();
-                }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                instance.run(() -> {
 
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) {
-                    instance.run(() -> {
-                        NoteResponse res = null;
-                        try {
-                            Log.e("TAG", "onResponse: " + response.toString());
-                            res = new NoteResponse(noteResponseJsonAdapter.fromJson(response.body().source()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        // TODO Callback here
+                    Log.e("TAG", "onResponse: " + response.body().source().toString());
 
-                    });
-                }
-            });
+                    NoteResponse res = new NoteResponse(noteResponseJsonAdapter.fromJson(response.body().source()));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    if(response.code() == 200)
+                        callBack.onSuccess(true);
+                    else
+                        callBack.onFailure("Cannot create, try again latter");
+                    // TODO Callback here
+                    callBack.onDone();
+                });
+            }
+        });
+
     }
-    public void editNote(String id, Note note){
+
+    public void editNote(String id, Note note, BaseCallBack<Boolean> callBack){
         String json = noteJsonAdapter.toJson(note);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -178,8 +191,8 @@ public class Note extends Base {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     instance.run(() -> {
-                        // TODO Callback here
-
+                        callBack.onFailure(e.getMessage());
+                        callBack.onDone();
                     });
                     e.printStackTrace();
                 }
@@ -187,15 +200,13 @@ public class Note extends Base {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     instance.run(() -> {
-                        NoteResponse res = null;
-                        try {
-                            Log.e("TAG", "onResponse: " + response.toString());
-                            res = new NoteResponse(noteResponseJsonAdapter.fromJson(response.body().source()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if(response.code() == 200){
+                            callBack.onSuccess(true);
+                        }else {
+                            callBack.onSuccess(false);
                         }
-                        // TODO Callback here
 
+                        callBack.onDone();
                     });
                 }
             });
@@ -204,7 +215,8 @@ public class Note extends Base {
             e.printStackTrace();
         }
     }
-    public void deleteNote(String id){
+
+    public void deleteNote(String id, BaseCallBack<Boolean> callBack){
         Request request = new Request.Builder()
                 .url(URL + API + "/" + id)
                 .addHeader("Authorization", "Bearer "+token)
@@ -217,8 +229,8 @@ public class Note extends Base {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     instance.run(() -> {
-                        // TODO Callback here
-
+                        callBack.onFailure(e.getMessage());
+                        callBack.onDone();
                     });
                     e.printStackTrace();
                 }
@@ -226,15 +238,13 @@ public class Note extends Base {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     instance.run(() -> {
-                        String res = null;
-                        try {
-                            Log.e("TAG", "onResponse: " + response.toString());
-                            res = response.body().toString();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if(response.code() == 200){
+                            callBack.onSuccess(true);
+                        }else {
+                            callBack.onSuccess(false);
                         }
-                        // TODO Callback here
 
+                        callBack.onDone();
                     });
                 }
             });

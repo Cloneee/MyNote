@@ -3,31 +3,29 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.mynote.interfaces.AuthCallBack;
-import com.example.mynote.interfaces.LoginParams;
-import com.example.mynote.interfaces.LoginResponse;
-import com.example.mynote.interfaces.Register;
+import com.example.mynote.interfaces.BaseCallBack;
+import com.example.mynote.models.LoginParams;
+import com.example.mynote.models.LoginResponse;
+import com.example.mynote.models.RegisterParams;
 import com.example.mynote.services.s.RunOnUIHelper;
 import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Auth extends Base {
     private static String API = "/user";
-    private String token = "";
     private static Auth auth;
     private static final JsonAdapter<LoginResponse> loginResponseAdapter = moshi.adapter(LoginResponse.class);
     private static final JsonAdapter<LoginParams> loginAdapter = moshi.adapter(LoginParams.class);
-    private static final JsonAdapter<Register> registerAdapter = moshi.adapter(Register.class);
+    private static final JsonAdapter<RegisterParams> registerAdapter = moshi.adapter(RegisterParams.class);
+
+    private RunOnUIHelper instance = RunOnUIHelper.getInstance();
 
     private Auth(){}
 
@@ -38,9 +36,7 @@ public class Auth extends Base {
         return auth;
     }
 
-    public AuthCallBack authCallBack;
-
-    public void login(LoginParams login){
+    public void login(LoginParams login, BaseCallBack callBack){
         String json = loginAdapter.toJson(login);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -48,15 +44,13 @@ public class Auth extends Base {
                 .post(body)
                 .build();
 
-        RunOnUIHelper instance = RunOnUIHelper.getInstance();
 
-        try{
-            client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     instance.run(() -> {
-                        authCallBack.onFailure(e.getMessage());
-                        authCallBack.onDone();
+                        callBack.onFailure(e.getMessage());
+                        callBack.onDone();
                     });
                     e.printStackTrace();
                 }
@@ -64,41 +58,49 @@ public class Auth extends Base {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     instance.run(() -> {
-                        LoginResponse res = null;
-                        try {
-                            Log.e("TAG", "onResponse: " + response.toString());
-                            res = new LoginResponse(loginResponseAdapter.fromJson(response.body().source()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        authCallBack.onLoginSuccess(res);
-                        authCallBack.onDone();
+                        Log.e("TAG", "onResponse: " + response);
+                        LoginResponse res = new LoginResponse(loginResponseAdapter.fromJson(response.body().source()));
+
+                        callBack.onSuccess(res);
+                        callBack.onDone();
                     });
                 }
             });
 
-        } catch (Exception e) {
-//            result = new LoginResponse();
-            e.printStackTrace();
-        }
+
     }
 
-    public Boolean register(Register register){
-        String json = registerAdapter.toJson(register);
+    public void register(RegisterParams registerParams, BaseCallBack callBack){
+        String json = registerAdapter.toJson(registerParams);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(URL + API + "/register")
                 .post(body)
                 .build();
-        try (Response response = client.newCall(request).execute()) {
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                instance.run(() -> {
+                    callBack.onFailure(e.getMessage());
+                    callBack.onDone();
+                });
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                instance.run(() -> {
+                    int code = response.code();
+                    Log.e("TAG", "onResponse: " + response);
+                    if(code == 200)
+                        callBack.onSuccess(true);
+                    else
+                        callBack.onSuccess(false);
+                    callBack.onDone();
+                });
+            }
+        });
+
     }
 
-    public String getToken(){
-        return token;
-    }
 }

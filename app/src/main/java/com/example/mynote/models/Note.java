@@ -3,9 +3,11 @@ package com.example.mynote.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.example.mynote.base.BaseClass;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
@@ -18,12 +20,12 @@ public class Note extends BaseClass implements Parcelable {
     private String password;
     private String tagId;
 
-    public static String ID = "ID";
-    public static String TITLE = "TITLE";
-    public static String MESSAGE = "MESSAGE";
-    public static String DATE_NOTIFY = "DATE_NOTIFY";
-    public static String PASSWORD = "PASSWORD";
-    public static String TAG_ID = "TAG_ID";
+    public static String ID = "id";
+    public static String TITLE = "title";
+    public static String MESSAGE = "message";
+    public static String DATE_NOTIFY = "dateNotify";
+    public static String PASSWORD = "password";
+    public static String TAG_ID = "tagId";
 
     public Note(String title, String message, String dateNotify, String password, String tagId,  String id) {
         this.id = id;
@@ -43,8 +45,7 @@ public class Note extends BaseClass implements Parcelable {
         this.tagId = tagId;
     }
 
-    public Note(String json) {
-        try {
+    public Note(String json) throws JSONException {
             if(json.isEmpty()) return;
 
             JSONObject  newJObject = new JSONObject(json);
@@ -56,11 +57,16 @@ public class Note extends BaseClass implements Parcelable {
             this.password = newJObject.getString(PASSWORD);
             this.tagId = newJObject.getString(TAG_ID);
 
-            return ;
-        }catch (Exception e){
-            return;
-        }
 
+    }
+
+    public Note(Note note) {
+        this.id = note.id;
+        this.title = note.title;
+        this.message = note.message;
+        this.dateNotify = note.dateNotify;
+        this.password = note.password;
+        this.tagId = note.tagId;
     }
 
     public String getId() {

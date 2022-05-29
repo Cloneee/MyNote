@@ -1,29 +1,20 @@
 package com.example.mynote.adapter;
 
 import android.content.Context;
-import android.database.DataSetObserver;
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.mynote.configs.Constant;
 import com.example.mynote.configs.NoteTag;
-import com.example.mynote.models.ArrayObserver;
+import com.example.mynote.interfaces.ArrayObserver;
 import com.example.mynote.models.Note;
 import com.example.mynote.R;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class NoteAdapter extends ArrayAdapter<Note>  {
 

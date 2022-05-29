@@ -1,4 +1,4 @@
-package com.example.mynote.interfaces;
+package com.example.mynote.models;
 
 public class LoginParams {
     public String username;

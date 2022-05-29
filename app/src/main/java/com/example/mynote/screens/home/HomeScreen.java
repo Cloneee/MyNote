@@ -1,6 +1,7 @@
 package com.example.mynote.screens.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.mynote.MainActivity;
 import com.example.mynote.R;
+import com.example.mynote.api.App;
 import com.example.mynote.databinding.ActivityHomeScreenBinding;
 
 public class HomeScreen extends AppCompatActivity {
@@ -58,4 +61,9 @@ public class HomeScreen extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        MainActivity.logout(this);
+//        super.onBackPressed();
+    }
 }

@@ -32,6 +32,8 @@ public class ToastHelper {
         return INSTANCE;
     }
 
+    static Context dialogContext;
+
     static public void init (Context context1){
         context = context1;
     }
@@ -50,22 +52,27 @@ public class ToastHelper {
         }
     }
 
-    static public void showLoadingDialog(Context dialogContext){
+    static public void showLoadingDialog(Context context){
         try {
-            if(dialogContext == null) return;
+            if(context == null) return;
 
-            dialog = new Dialog(dialogContext, android.R.style.Theme_Black);
-            View views = LayoutInflater.from(dialogContext).inflate(R.layout.loading_layout, null);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.getWindow().setBackgroundDrawableResource(R.color.feed_item_bg);
-            dialog.setContentView(views);
+            if(dialog != null)
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
 
-
-            if(dialog.isShowing()) {
-                dialog.dismiss();
+            if(!context.equals(dialogContext)){
+                dialog = new Dialog(context, android.R.style.Theme_Black);
+                View views = LayoutInflater.from(context).inflate(R.layout.loading_layout, null);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.getWindow().setBackgroundDrawableResource(R.color.feed_item_bg);
+                dialog.setContentView(views);
             }
 
             dialog.show();
+
+            dialogContext = context;
+
 
         }catch (Exception e){
             Log.e("TAG", "showLoadingDialog: " + e.getMessage() );

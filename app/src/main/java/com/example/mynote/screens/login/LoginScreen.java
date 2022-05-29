@@ -7,20 +7,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.mynote.MainActivity;
 import com.example.mynote.R;
 
-import com.example.mynote.api.Auth;
+import com.example.mynote.models.User;
+import com.example.mynote.models.UserType;
+import com.example.mynote.repos.AuthenticationRepository;
 import com.example.mynote.services.s.ToastHelper;
 import com.example.mynote.databinding.ActivityLoginScreenBinding;
-import com.example.mynote.interfaces.AuthCallBack;
-import com.example.mynote.interfaces.LoginParams;
-import com.example.mynote.interfaces.LoginResponse;
 import com.example.mynote.screens.register.RegisterScreen;
-import com.example.mynote.screens.home.HomeScreen;
 
 public class LoginScreen extends AppCompatActivity {
     private ActivityLoginScreenBinding binding;
-    Auth authenticationRepos = Auth.getAuth();
+    AuthenticationRepository authenticationRepos = new AuthenticationRepository();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,47 +30,29 @@ public class LoginScreen extends AppCompatActivity {
         binding = ActivityLoginScreenBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
         binding.loginButton.setOnClickListener(view1 -> {
-            ToastHelper.showLoadingDialog(this);
-            try {
-                authenticationRepos.login(new LoginParams(binding.username.getText().toString(), binding.password.getText().toString()));
-                authenticationRepos.authCallBack = new AuthCallBack() {
-                    @Override
-                    public void onLoginSuccess(LoginResponse response) {
-                        if(response == null) {
-                            ToastHelper.showToast("Cannot get response");
-                            return;
-                        }
-
-                        if(response.token.isEmpty()|| response.username.isEmpty()){
-                            ToastHelper.showToast("User name or password i s incorrect");
-                            return;
-                        }
-
-                        startActivity(new Intent(getApplicationContext(), HomeScreen.class));
-                    }
-
-                    @Override
-                    public void onFailure(String meg) {
-                        ToastHelper.showToast(meg);
-                    }
-
-                    @Override
-                    public void onDone() {
-                        ToastHelper.closeLoadingDialog();
-                    }
-                };
-
-
-            }catch (Exception e){
-                ToastHelper.showToast("Cannot get response");
-                Log.e("TAG", e.toString() );
+            if(binding.username.getText().toString().isEmpty()){
+                ToastHelper.showToast("User name cannot be empty");
+                return;
             }
+            if(binding.password.getText().toString().isEmpty()){
+                ToastHelper.showToast("User name cannot be empty");
+                return;
+            }
+            ToastHelper.showLoadingDialog(this);
+
+            authenticationRepos.login(binding.username.getText().toString(), binding.password.getText().toString(),
+                res -> {
+                    MainActivity.login(this, res.toString(), new User(""));
+                }
+            );
+
         });
         binding.registerButton.setOnClickListener(view1 -> startActivity(new Intent(this, RegisterScreen.class)));
 
         binding.guestLoginButton.setOnClickListener(view1 -> {
-            Log.e("TAG", "guest");
+            MainActivity.login(this, "", new User());
         });
     }
 

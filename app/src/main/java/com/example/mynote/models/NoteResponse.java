@@ -1,4 +1,4 @@
-package com.example.mynote.interfaces;
+package com.example.mynote.models;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ public class NoteResponse {
     public Boolean isPin;
     public String dateNotify;
     public String password;
-    public Date dateCreated;
+    public String dateCreated;
     public String user;
 
     public NoteResponse(NoteResponse res) {

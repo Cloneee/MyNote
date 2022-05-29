@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register"
+            android:text="@string/registerParams"
             android:textAlignment="textStart"
             android:textColor="@color/white"
             android:textSize="34dp"
@@ -97,6 +97,31 @@
             android:textColor="@color/white_semi"
             android:background="@drawable/custom_input"
             android:inputType="textPassword"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email_label"
+            android:labelFor="@id/email"
+            android:textAlignment="textStart"
+            android:textColor="@color/white_semi"
+            android:layout_marginBottom="5dp"
+            />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:hint="@string/confirm_password_hint"
+            android:textAllCaps="false"
+            android:textColorHint="@color/white_semi"
+            android:textColor="@color/white_semi"
+            android:background="@drawable/custom_input"
             />
 
         <View

@@ -2,15 +2,29 @@ package com.example.mynote.screens.register;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.mynote.MainActivity;
 import com.example.mynote.R;
+import com.example.mynote.api.Auth;
+import com.example.mynote.interfaces.BaseCallBack;
 import com.example.mynote.databinding.ActivityRegisterBinding;
+import com.example.mynote.models.LoginParams;
+import com.example.mynote.models.LoginResponse;
+import com.example.mynote.models.RegisterParams;
+import com.example.mynote.models.User;
+import com.example.mynote.repos.AuthenticationRepository;
+import com.example.mynote.screens.home.HomeScreen;
+import com.example.mynote.services.s.ToastHelper;
 
 public class RegisterScreen extends AppCompatActivity {
     ActivityRegisterBinding binding;
+
+    AuthenticationRepository authenticationRepos = new AuthenticationRepository();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +41,41 @@ public class RegisterScreen extends AppCompatActivity {
     }
 
     void register (){
-        Log.e("TAG", "register: " );
+        if(binding.username.getText().toString().isEmpty()){
+            ToastHelper.showToast("User name cannot be empty");
+            return;
+        }
+        if(binding.password.getText().toString().isEmpty()){
+            ToastHelper.showToast("User name cannot be empty");
+            return;
+        }
+        if(binding.confirmPassword.getText().toString().isEmpty()){
+            ToastHelper.showToast("User name cannot be empty");
+            return;
+        }
+        if(binding.email.getText().toString().isEmpty()){
+            ToastHelper.showToast("User name cannot be empty");
+            return;
+        }
+        if(!binding.password.getText().toString().equals(binding.confirmPassword.getText().toString())){
+            ToastHelper.showToast("Confirm password is not match with password");
+            return;
+        }
+
+        ToastHelper.showLoadingDialog(this);
+        authenticationRepos.register(binding.username.getText().toString(), binding.password.getText().toString(), binding.email.getText().toString(),
+            (res) -> {
+                login();
+            }
+        );
+    }
+
+    void login (){
+        authenticationRepos.login(binding.username.getText().toString(), binding.password.getText().toString(),
+            (res)->{
+                MainActivity.login(this, res.toString(), new User(""));
+            }
+        );
     }
 
     @Override
