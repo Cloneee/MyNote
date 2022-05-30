@@ -16,6 +16,7 @@ import com.example.mynote.models.LoginParams;
 import com.example.mynote.models.LoginResponse;
 import com.example.mynote.models.RegisterParams;
 import com.example.mynote.models.User;
+import com.example.mynote.models.UserType;
 import com.example.mynote.repos.AuthenticationRepository;
 import com.example.mynote.screens.home.HomeScreen;
 import com.example.mynote.services.s.ToastHelper;
@@ -23,7 +24,7 @@ import com.example.mynote.services.s.ToastHelper;
 public class RegisterScreen extends AppCompatActivity {
     ActivityRegisterBinding binding;
 
-    AuthenticationRepository authenticationRepos = new AuthenticationRepository();
+    AuthenticationRepository authenticationRepos = AuthenticationRepository.getInstance();
 
 
     @Override
@@ -73,7 +74,7 @@ public class RegisterScreen extends AppCompatActivity {
     void login (){
         authenticationRepos.login(binding.username.getText().toString(), binding.password.getText().toString(),
             (res)->{
-                MainActivity.login(this, res.toString(), new User(""));
+                MainActivity.login(this, ((LoginResponse) res).token, new User("", UserType.NORMAL, ((LoginResponse) res).verify));
             }
         );
     }

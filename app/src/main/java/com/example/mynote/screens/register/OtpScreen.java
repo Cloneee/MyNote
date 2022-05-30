@@ -25,6 +25,7 @@ import java.util.TimerTask;
 public class OtpScreen extends AppCompatActivity {
     RunOnUIHelper runOnUIHelper = RunOnUIHelper.getInstance();
     int expireTime = 3;
+    String otp = "";
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityOtpScreenBinding binding;
@@ -44,8 +45,9 @@ public class OtpScreen extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            otp = charSequence.toString();
             if(charSequence.toString().length() == 6 ){
-                ToastHelper.showToast(charSequence.toString());
+                verify();
             }
         }
 
@@ -53,6 +55,14 @@ public class OtpScreen extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
 
         }
+    });
+
+    binding.verifyOtpButton.setOnClickListener(view -> {
+        verify();
+    });
+
+    binding.resendButton.setOnClickListener(view -> {
+        ToastHelper.showToast("The OTP has been sent");
     });
 
     new Timer().scheduleAtFixedRate(new TimerTask(){
@@ -68,6 +78,10 @@ public class OtpScreen extends AppCompatActivity {
                 });
             }
         },0,1000);
+    }
+
+    void verify(){
+        ToastHelper.showToast(otp);
     }
 
 }

@@ -3,15 +3,16 @@ package com.example.mynote.models;
 public class User {
     private String user;
     private UserType type;
+    private boolean isVerified;
 
     public User(){
-        user = "";
-        type = UserType.GUEST;
+        new User("", UserType.GUEST, false);
     }
 
-    public User(String user){
+    public User(String user, UserType userType, boolean verify){
         this.user = user;
-        type = UserType.NORMAL;
+        type = userType;
+        isVerified = verify;
     }
 
     public String getUser() {
@@ -30,4 +31,11 @@ public class User {
         this.type = type;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
 }

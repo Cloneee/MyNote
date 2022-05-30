@@ -7,8 +7,12 @@ import com.example.mynote.interfaces.BaseCallBack;
 import com.example.mynote.models.LoginParams;
 import com.example.mynote.models.LoginResponse;
 import com.example.mynote.models.RegisterParams;
+import com.example.mynote.models.VerifyOtpParams;
 import com.example.mynote.services.s.RunOnUIHelper;
 import com.squareup.moshi.JsonAdapter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -100,7 +104,67 @@ public class Auth extends Base {
                 });
             }
         });
+    }
 
+    public void genOtp(String email, BaseCallBack<Boolean> baseCallBack) {
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("email", email);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(URL + API + "/otp")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                baseCallBack.onFailure(e.getMessage());
+                baseCallBack.onDone();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.code() == 200){
+                    baseCallBack.onSuccess(true);
+                }else
+                    baseCallBack.onSuccess(false);
+                baseCallBack.onDone();
+
+            }
+        });
+    }
+
+    public void verifyOtp(VerifyOtpParams params, BaseCallBack<Boolean> baseCallBack){
+
+        RequestBody body = RequestBody.create(params.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(URL + API + "/otp")
+                .put(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                baseCallBack.onFailure(e.getMessage());
+                baseCallBack.onDone();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.code() == 200){
+                    baseCallBack.onSuccess(true);
+                }else
+                    baseCallBack.onSuccess(false);
+                baseCallBack.onDone();
+
+            }
+        });
     }
 
 }

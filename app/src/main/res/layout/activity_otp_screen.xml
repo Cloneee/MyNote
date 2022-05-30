@@ -102,7 +102,7 @@
         android:layout_height="50dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/guest_login_button"
+        android:id="@+id/verify_otp_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/submit_label"

@@ -10,6 +10,7 @@ import android.view.View;
 import com.example.mynote.MainActivity;
 import com.example.mynote.R;
 
+import com.example.mynote.models.LoginResponse;
 import com.example.mynote.models.User;
 import com.example.mynote.models.UserType;
 import com.example.mynote.repos.AuthenticationRepository;
@@ -20,7 +21,7 @@ import com.example.mynote.screens.register.RegisterScreen;
 
 public class LoginScreen extends AppCompatActivity {
     private ActivityLoginScreenBinding binding;
-    AuthenticationRepository authenticationRepos = new AuthenticationRepository();
+    AuthenticationRepository authenticationRepos = AuthenticationRepository.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,8 @@ public class LoginScreen extends AppCompatActivity {
             ToastHelper.showLoadingDialog(this);
 
             authenticationRepos.login(binding.username.getText().toString(), binding.password.getText().toString(),
-                res -> {
-                    MainActivity.login(this, res.toString(), new User(""));
+                    res -> {
+                    MainActivity.login(this, ((LoginResponse) res).token, new User("", UserType.NORMAL, ((LoginResponse) res).verify));
                 }
             );
 

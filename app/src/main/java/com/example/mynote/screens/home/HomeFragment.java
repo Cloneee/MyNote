@@ -94,32 +94,33 @@ public class HomeFragment extends Fragment{
         registerForContextMenu(binding.listView);
 
         mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    try {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // Handle the Intent
-                            Intent intent = result.getData();
-                            if(intent == null) return;
+            result -> {
+                try {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Handle the Intent
+                        Intent intent = result.getData();
+                        if(intent == null) return;
 
-                            Note noteResult = (Note) intent.getParcelableExtra(NOTE_RESULT);
+                        Note noteResult = (Note) intent.getParcelableExtra(NOTE_RESULT);
 
-                            if(noteResult == null) return;
-                            Log.e("TAG", "onActivityResult: " + noteResult);
+                        if(noteResult == null) return;
+                        Log.e("TAG", "onActivityResult: " + noteResult);
 
-                            //do what you want
+                        //do what you want
 
-                            if(isNoteExist(noteResult)){
-                                Note n = getNoteInArray(noteResult.getId());
-                                changeNote(n, noteResult);
-                            } else {
-                                addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
-                            }
+                        if(isNoteExist(noteResult)){
+                            Note n = getNoteInArray(noteResult.getId());
+                            changeNote(n, noteResult);
+                        } else {
+                            addNote(noteResult.getTitle(), noteResult.getMessage(), noteResult.getDateNotify(), noteResult.getPassword(), noteResult.getTag());
                         }
-                    }catch (Exception e){
-                        Log.e("TAG", "error: " + e);
                     }
+                }catch (Exception e){
+                    Log.e("TAG", "error: " + e);
+                }
 
-                });
+            }
+        );
 
         binding.listView.setOnItemClickListener((AdapterView<?> adapterView, View view1, int position, long id) -> {
             try{
@@ -204,6 +205,7 @@ public class HomeFragment extends Fragment{
 
     private void initNotes() {
         try{
+            Log.e("TAG", "is verified: " + MainActivity.user.isVerified());
             if(MainActivity.user.getType().equals(UserType.NORMAL)){
                 appRepository.getNotes(getContext(), new CustomCallBack() {
                     @Override
