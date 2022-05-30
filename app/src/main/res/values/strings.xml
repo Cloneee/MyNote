@@ -15,6 +15,12 @@
     <string name="forgot_password_label">Forgot password?</string>
     <string name="register_label">Don\'t have an account?</string>
     <string name="register_button_label">Register</string>
+    <string name="otp_label">OTP</string>
+    <string name="otp_fill_message">Please enter the OTP sent to your email</string>
+    <string name="otp_do_not_have_message">Don\'t receive an OTP?</string>
+    <string name="otp_will_expire_message">Otp will expire in </string>
+    <string name="resend_otp_label">Resend OTP</string>
+    <string name="submit_label">Submit</string>
     <string name="or_label">or</string>
     <string name="anonymous_user">Login as guest</string>
 
@@ -31,4 +37,13 @@
     <string name="empty_label">What do you want to do today?</string>
     <string name="empty_sub_label">Tap + to add your tasks</string>
     <string name="img_description_note_pin">pint for note title</string>
+    <string name="title_activity_otp_screen">OtpScreen</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

@@ -13,6 +13,7 @@ import com.example.mynote.R;
 import com.example.mynote.models.User;
 import com.example.mynote.models.UserType;
 import com.example.mynote.repos.AuthenticationRepository;
+import com.example.mynote.screens.register.OtpScreen;
 import com.example.mynote.services.s.ToastHelper;
 import com.example.mynote.databinding.ActivityLoginScreenBinding;
 import com.example.mynote.screens.register.RegisterScreen;
@@ -49,7 +50,7 @@ public class LoginScreen extends AppCompatActivity {
             );
 
         });
-        binding.registerButton.setOnClickListener(view1 -> startActivity(new Intent(this, RegisterScreen.class)));
+        binding.registerButton.setOnClickListener(view1 -> startActivity(new Intent(this, OtpScreen.class)));
 
         binding.guestLoginButton.setOnClickListener(view1 -> {
             MainActivity.login(this, "", new User());

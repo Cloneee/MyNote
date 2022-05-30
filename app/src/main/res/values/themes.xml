@@ -25,4 +25,11 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
         <item name="android:statusBarColor" >@color/background</item>
     </style>
+    <style name="splash_screen_theme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="splash_screen_theme.AppBarOverlay"
+        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="splash_screen_theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
