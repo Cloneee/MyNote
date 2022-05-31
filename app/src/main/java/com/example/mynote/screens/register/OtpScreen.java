@@ -11,6 +11,8 @@ import com.example.mynote.repos.AuthenticationRepository;
 import com.example.mynote.services.s.RunOnUIHelper;
 import com.example.mynote.services.s.ToastHelper;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Looper;
@@ -29,15 +31,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class OtpScreen extends AppCompatActivity {
-    AuthenticationRepository authenticationRepository = AuthenticationRepository.getInstance();
-
     RunOnUIHelper runOnUIHelper = RunOnUIHelper.getInstance();
     int expireTime = 3;
     String otp = "";
     String email = "";
 
+    int a = 1;
+
     private AppBarConfiguration appBarConfiguration;
     private ActivityOtpScreenBinding binding;
+
+    AuthenticationRepository repository = AuthenticationRepository.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,25 +109,36 @@ public class OtpScreen extends AppCompatActivity {
 
         int a = intent.getIntExtra(Constant.OTP_RESULT, 1);
 
+        //0 is check email, then you can skip it
+        //1 is check otp
         if(a == 0){
             binding.skipButton.setVisibility(View.VISIBLE);
             binding.skipButton.setOnClickListener(view -> {
-                goBack();
+                goBack(null);
             });
+            a = 0;
         }
     }
 
     void verify(){
-        goBack();
-//        authenticationRepository.verifyOtp(email, otp, res -> {
-//            goBack();
-//        });
-
-
+        ToastHelper.showLoadingDialog(this);
+        if(a == 0){
+            repository.verifyEmail(email, otp, res -> {
+                goBack(null);
+            });
+        }else {
+            repository.verifyOtp(email, otp, res -> {
+                goBack(otp);
+            });
+        }
     }
 
-    void goBack(){
+    void goBack(@Nullable String otp){
         Intent i = new Intent();
+        if(otp != null){
+            i.putExtra(Constant.OTP_VALUE, otp);
+        }
+
         setResult(Activity.RESULT_OK, i);
         finish();
     }

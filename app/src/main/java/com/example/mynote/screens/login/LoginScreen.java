@@ -47,7 +47,7 @@ public class LoginScreen extends AppCompatActivity {
 
             authenticationRepos.login(binding.username.getText().toString(), binding.password.getText().toString(),
                     res -> {
-                    MainActivity.login(this, ((LoginResponse) res).token, new User("", UserType.NORMAL, ((LoginResponse) res).verify));
+                    MainActivity.login(this, ((LoginResponse) res).token, new User("", ((LoginResponse) res).email, UserType.NORMAL, ((LoginResponse) res).verify));
                 }
             );
 

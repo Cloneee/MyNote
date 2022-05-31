@@ -95,6 +95,7 @@ public class App extends Base {
         });
 
     }
+
     public void getNoteById(String id){
         Request request = new Request.Builder()
                 .url(URL + API + "/" + id)

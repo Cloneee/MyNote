@@ -1,16 +1,23 @@
 package com.example.mynote.models;
 
+import android.util.Log;
+
 public class User {
     private String user;
+    private String email;
     private UserType type;
     private boolean isVerified;
 
     public User(){
-        new User("", UserType.GUEST, false);
+        this.user = "";
+        this.email = "";
+        this.type = UserType.GUEST;
+        this.isVerified = false;
     }
 
-    public User(String user, UserType userType, boolean verify){
+    public User(String user, String email, UserType userType, boolean verify){
         this.user = user;
+        this.email = email;
         type = userType;
         isVerified = verify;
     }
@@ -37,5 +44,13 @@ public class User {
 
     public void setVerified(boolean verified) {
         isVerified = verified;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

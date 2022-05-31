@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.mynote.api.Auth;
+import com.example.mynote.configs.Constant;
 import com.example.mynote.interfaces.BaseCallBack;
 import com.example.mynote.interfaces.CustomCallBack;
 import com.example.mynote.models.LoginParams;
@@ -14,6 +16,7 @@ import com.example.mynote.models.RegisterParams;
 import com.example.mynote.models.VerifyOtpParams;
 import com.example.mynote.screens.home.HomeScreen;
 import com.example.mynote.services.s.ToastHelper;
+import com.example.mynote.services.storage.ShareReferenceHelper;
 
 public class AuthenticationRepository {
     private static AuthenticationRepository instance;
@@ -71,8 +74,10 @@ public class AuthenticationRepository {
                 public void onSuccess(Boolean response) {
                     if(response)
                         callBack.run(null);
-                    else
+                    else {
                         ToastHelper.showToast("Check your input again");
+                        ToastHelper.closeLoadingDialog();
+                    }
                 }
 
                 @Override
@@ -88,7 +93,9 @@ public class AuthenticationRepository {
         auth.genOtp(email, response -> {
             if((boolean) !response){
                 ToastHelper.showToast("Cannot send this request, try again latter");
+                return;
             }
+            callBack.run(null);
         });
     }
 
@@ -97,6 +104,49 @@ public class AuthenticationRepository {
             if((boolean) response){
                 callBack.run(null);
             }else {
+                ToastHelper.showToast("Cannot send this request, try again latter");
+            }
+        });
+    }
+
+    public void verifyEmail(String email, String otp, CustomCallBack callBack){
+        auth.verifyEmail(new VerifyOtpParams(email, otp), response -> {
+            if((boolean) response){
+                ShareReferenceHelper.getInstance().storeString(Constant.USER_EMAIL_VERIFY, "1");
+                callBack.run(null);
+            }else {
+                ToastHelper.showToast("Cannot send this request, try again latter");
+            }
+        });
+    }
+
+    public void changePassword(String password, String newPassword, String token, CustomCallBack callBack){
+        auth.changePassword(password, newPassword, token, response -> {
+            if((boolean) response){
+                callBack.run(null);
+            }else {
+                ToastHelper.showToast("Cannot send this request, try again latter");
+            }
+        });
+    }
+
+    public void recoverPassword(String email, String otp, String newPassword, CustomCallBack callBack){
+        auth.recoverPassword(email, otp, newPassword, response -> {
+            if((boolean) response){
+                callBack.run(null);
+            }else {
+                ToastHelper.showToast("Cannot send this request, try again latter");
+            }
+        });
+    }
+
+    public void getModifiedDate(String token, CustomCallBack callBack){
+        auth.getModifiedDate(token, response -> {
+            Log.e("TAG", "getModifiedDate: " + response );
+            if((boolean) response){
+                callBack.run(null);
+            }else {
+                callBack.run2(null);
                 ToastHelper.showToast("Cannot send this request, try again latter");
             }
         });

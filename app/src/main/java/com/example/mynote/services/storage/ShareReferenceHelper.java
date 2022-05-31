@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.mynote.base.BaseClass;
 import com.example.mynote.configs.Constant;
@@ -66,6 +67,7 @@ public class ShareReferenceHelper {
 
     public boolean storeString(String key, String data){
         try{
+            Log.e("TAG", "v: " +key + " "+ data );
             editor.putString(Constant.PREFIX_STORAGE + key, data);
             editor.commit();
             return true;
@@ -76,7 +78,7 @@ public class ShareReferenceHelper {
 
     public String getString(String key){
         try{
-            return sharedPreferences.getString(Constant.PREFIX_STORAGE + key, null);
+            return sharedPreferences.getString(Constant.PREFIX_STORAGE + key, "");
         }catch (Exception e){
             return "";
         }

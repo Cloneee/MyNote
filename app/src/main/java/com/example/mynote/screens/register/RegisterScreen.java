@@ -32,7 +32,7 @@ import com.example.mynote.services.s.ToastHelper;
 public class RegisterScreen extends AppCompatActivity {
     ActivityRegisterBinding binding;
 
-    AuthenticationRepository authenticationRepos = AuthenticationRepository.getInstance();
+    AuthenticationRepository repository = AuthenticationRepository.getInstance();
 
     ActivityResultLauncher<Intent> mStartForResult;
 
@@ -92,33 +92,29 @@ public class RegisterScreen extends AppCompatActivity {
             return;
         }
 
-//        ToastHelper.showLoadingDialog(this);
-        Intent i = new Intent(this, OtpScreen.class);
-        //0 is verify email
-        //1 is other otp
-        i.putExtra(Constant.OTP_RESULT, 0);
-        i.putExtra(Constant.OTP_MAIL, binding.email.getText().toString());
+        ToastHelper.showLoadingDialog(this);
 
-        mStartForResult.launch(i);
-//        authenticationRepos.register(binding.username.getText().toString(), binding.password.getText().toString(), binding.email.getText().toString(),
-//            (res) -> {
-//                Intent i = new Intent(this, OtpScreen.class);
-//                //0 is verify email
-//                //1 is other otp
-//                i.putExtra(Constant.OTP_RESULT, 0);
-//                mStartForResult.launch(i);
-//            }
-//        );
+        repository.register(binding.username.getText().toString(), binding.password.getText().toString(), binding.email.getText().toString(),
+            (res) -> {
+                ToastHelper.showLoadingDialog(this);
+                repository.genOtp(binding.email.getText().toString(), res1 -> {
+                    Intent i = new Intent(this, OtpScreen.class);
+                    //0 is verify email
+                    //1 is other otp
+                    i.putExtra(Constant.OTP_RESULT, 0);
+                    mStartForResult.launch(i);
+                });
+            }
+        );
     }
 
     void login (){
-        MainActivity.login(this, "", new User("", UserType.GUEST, false));
-
-//        authenticationRepos.login(binding.username.getText().toString(), binding.password.getText().toString(),
-//            (res)->{
-//                MainActivity.login(this, ((LoginResponse) res).token, new User("", UserType.NORMAL, ((LoginResponse) res).verify));
-//            }
-//        );
+        ToastHelper.showLoadingDialog(this);
+        repository.login(binding.username.getText().toString(), binding.password.getText().toString(),
+            (res)->{
+                MainActivity.login(this, ((LoginResponse) res).token, new User("", ((LoginResponse) res).email, UserType.NORMAL, ((LoginResponse) res).verify));
+            }
+        );
     }
 
     @Override

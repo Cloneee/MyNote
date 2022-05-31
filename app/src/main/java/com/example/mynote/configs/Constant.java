@@ -16,6 +16,10 @@ public class Constant {
 
     public static String PASSWORD_SCREEN_TYPE = "PASSWORD_SCREEN_TYPE";
 
+    public static String API_TOKEN = "API_TOKEN";
+    public static String USER_EMAIL = "USER_EMAIL";
+    public static String USER_EMAIL_VERIFY = "USER_EMAIL_VERIFY";
+
 
     public static String NOTE_LIST_REFERENCE = "NOTE_LIST_REFERENCE";
 

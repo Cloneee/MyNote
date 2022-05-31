@@ -7,12 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.mynote.MainActivity;
 import com.example.mynote.R;
 import com.example.mynote.configs.Constant;
 import com.example.mynote.databinding.ActivityChangePasswordBinding;
+import com.example.mynote.repos.AuthenticationRepository;
+import com.example.mynote.services.s.ToastHelper;
+import com.example.mynote.services.storage.ShareReferenceHelper;
 
 public class ChangePassword extends AppCompatActivity {
     ActivityChangePasswordBinding binding;
+
+    AuthenticationRepository repository = AuthenticationRepository.getInstance();
 
     String email = "";
     String otp = "";
@@ -60,10 +66,34 @@ public class ChangePassword extends AppCompatActivity {
     }
 
     void changePassword(){
+        if(binding.password.getText().toString().isEmpty() || binding.oldPassword.getText().toString().isEmpty() || binding.confirmPassword.getText().toString().isEmpty()){
+            ToastHelper.showToast("Input cannot be empty");
+            return;
+        }
 
+        if(!binding.password.getText().toString().equals(binding.confirmPassword.getText().toString())){
+            ToastHelper.showToast("New password and confirm password must match");
+            return;
+        }
+        ToastHelper.showLoadingDialog(this);
+        repository.changePassword(binding.oldPassword.getText().toString(), binding.password.getText().toString(), ShareReferenceHelper.getInstance().getString(Constant.API_TOKEN), res -> {
+            MainActivity.logout(this);
+        });
     }
 
     void resetPassword(){
+        if(binding.password.getText().toString().isEmpty() || binding.confirmPassword.getText().toString().isEmpty()){
+            ToastHelper.showToast("Input cannot be empty");
+            return;
+        }
 
+        if(!binding.password.getText().toString().equals(binding.confirmPassword.getText().toString())){
+            ToastHelper.showToast("New password and confirm password must match");
+            return;
+        }
+        ToastHelper.showLoadingDialog(this);
+        repository.recoverPassword(email, otp, binding.password.getText().toString(), res -> {
+            MainActivity.logout(this);
+        });
     }
 }
