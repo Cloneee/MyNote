@@ -116,7 +116,7 @@ public class OtpScreen extends AppCompatActivity {
             binding.skipButton.setOnClickListener(view -> {
                 goBack(null);
             });
-            a = 0;
+            this.a = 0;
         }
     }
 
