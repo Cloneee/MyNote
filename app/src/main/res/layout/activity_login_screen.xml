@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
             android:text="@string/forgot_password_label"
-            android:textColor="@color/white_semi"
+            android:textColor="@color/white"
             android:layout_marginTop="5dp"
             />
 

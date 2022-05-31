@@ -9,6 +9,14 @@ import java.util.ArrayList;
 public class Constant {
     public static String NOTE_RESULT = "NOTE_RESULT";
 
+    public static String OTP_RESULT = "OTP_RESULT";
+
+    public static String OTP_MAIL = "OTP_MAIL";
+    public static String OTP_VALUE = "OTP_VALUE";
+
+    public static String PASSWORD_SCREEN_TYPE = "PASSWORD_SCREEN_TYPE";
+
+
     public static String NOTE_LIST_REFERENCE = "NOTE_LIST_REFERENCE";
 
     public static String PREFIX_STORAGE = "MY_NOTE_";

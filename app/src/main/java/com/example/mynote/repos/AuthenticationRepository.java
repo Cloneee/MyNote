@@ -92,9 +92,11 @@ public class AuthenticationRepository {
         });
     }
 
-    public void verifyOtp(String email, String otp){
+    public void verifyOtp(String email, String otp, CustomCallBack callBack){
         auth.verifyOtp(new VerifyOtpParams(email, otp), response -> {
-            if((boolean) !response){
+            if((boolean) response){
+                callBack.run(null);
+            }else {
                 ToastHelper.showToast("Cannot send this request, try again latter");
             }
         });

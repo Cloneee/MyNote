@@ -1,8 +1,13 @@
 package com.example.mynote.screens.register;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.mynote.configs.Constant;
 import com.example.mynote.databinding.ActivityOtpScreenBinding;
+import com.example.mynote.models.Note;
+import com.example.mynote.repos.AuthenticationRepository;
 import com.example.mynote.services.s.RunOnUIHelper;
 import com.example.mynote.services.s.ToastHelper;
 import com.google.android.material.snackbar.Snackbar;
@@ -11,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,9 +29,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class OtpScreen extends AppCompatActivity {
+    AuthenticationRepository authenticationRepository = AuthenticationRepository.getInstance();
+
     RunOnUIHelper runOnUIHelper = RunOnUIHelper.getInstance();
     int expireTime = 3;
     String otp = "";
+    String email = "";
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityOtpScreenBinding binding;
@@ -36,6 +45,13 @@ public class OtpScreen extends AppCompatActivity {
 
     binding = ActivityOtpScreenBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
+
+        Intent intent = getIntent();
+        try {
+            initData(intent);
+        }catch (Exception e){
+            Log.e("TAG", e.toString() );
+        }
 
     binding.etOtp.addTextChangedListener(new TextWatcher() {
         @Override
@@ -80,8 +96,35 @@ public class OtpScreen extends AppCompatActivity {
         },0,1000);
     }
 
-    void verify(){
-        ToastHelper.showToast(otp);
+    void initData(Intent intent){
+        if(intent == null){
+            finish();
+        }
+
+        email = intent.getStringExtra(Constant.OTP_MAIL);
+
+        int a = intent.getIntExtra(Constant.OTP_RESULT, 1);
+
+        if(a == 0){
+            binding.skipButton.setVisibility(View.VISIBLE);
+            binding.skipButton.setOnClickListener(view -> {
+                goBack();
+            });
+        }
     }
 
+    void verify(){
+        goBack();
+//        authenticationRepository.verifyOtp(email, otp, res -> {
+//            goBack();
+//        });
+
+
+    }
+
+    void goBack(){
+        Intent i = new Intent();
+        setResult(Activity.RESULT_OK, i);
+        finish();
+    }
 }
